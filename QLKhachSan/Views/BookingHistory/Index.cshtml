@@ -1,0 +1,1039 @@
+﻿@model IEnumerable<QLKhachSan.Models.BookingHistoryViewModel>
+
+@using System.Linq
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Lịch sử đặt phòng - Luxury Hotel
+    </title>
+
+
+    <!-- TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
+    <style>
+
+        body {
+            font-family: Arial, "Segoe UI", sans-serif;
+            background: linear-gradient( 180deg, #f7f4ed 0%, #ffffff 45%, #f5f5f5 100% );
+        }
+
+
+        .history-header {
+            background: linear-gradient( 135deg, #090704 0%, #171006 55%, #2b1d08 100% );
+        }
+
+
+        .gold-text {
+            color: #d4af37;
+        }
+
+
+        .booking-card {
+            background: white;
+            border: 1px solid #ece6d8;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+
+            .booking-card:hover {
+                transform: translateY(-4px);
+                border-color: #d4af37;
+                box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+            }
+
+
+        .room-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+
+
+        .info-box {
+            background: #faf9f6;
+            border: 1px solid #eee8db;
+        }
+
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        .status-waiting {
+            color: #92400e;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+        }
+
+
+        .status-confirmed {
+            color: #1e40af;
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+        }
+
+
+        .status-checkin {
+            color: #075985;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+        }
+
+
+        .status-completed {
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+        }
+
+
+        .status-cancelled {
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+        }
+
+
+        .status-default {
+            color: #374151;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+
+
+        .back-button {
+            border: 1px solid rgba(212, 175, 55, 0.8);
+            color: #f5d76e;
+            transition: all 0.2s ease;
+        }
+
+
+            .back-button:hover {
+                background: #d4af37;
+                color: #111;
+            }
+
+
+        .gold-button {
+            background: linear-gradient( 135deg, #b68a22, #e5c357 );
+            color: #171006;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+
+            .gold-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(180, 138, 34, 0.3);
+            }
+
+
+        @@media (max-width: 768px) {
+
+            .room-image {
+                height: 210px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body class="min-h-screen text-gray-800">
+
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <header class="history-header text-white">
+
+        <div class="max-w-7xl mx-auto
+                    px-4 sm:px-6 lg:px-8
+                    py-5">
+
+            <div class="flex flex-col
+                        md:flex-row
+                        md:items-center
+                        md:justify-between
+                        gap-4">
+
+
+                <!-- LOGO -->
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Home"
+                         )"
+                   class="flex items-center gap-3">
+
+                    <div class="w-11 h-11
+                                rounded-full
+                                border border-yellow-500
+                                flex items-center
+                                justify-center
+                                text-yellow-400">
+
+                        <i class="fas fa-crown text-xl"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="font-bold
+                                    text-xl
+                                    tracking-wide">
+
+                            LUXURY HOTEL
+
+                        </div>
+
+                        <div class="text-yellow-300
+                                    text-xs
+                                    tracking-[3px]">
+
+                            LUXURY &amp; COMFORT
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+                <!-- QUAY LẠI -->
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Home"
+                         )"
+                   class="back-button
+                          px-5 py-2.5
+                          rounded-lg
+                          font-semibold
+                          text-sm">
+
+                    <i class="fas fa-arrow-left mr-2"></i>
+
+                    Về trang chủ
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- TIÊU ĐỀ -->
+
+        <div class="max-w-7xl mx-auto
+                    px-4 sm:px-6 lg:px-8
+                    pt-10 pb-16
+                    text-center">
+
+            <div class="gold-text text-sm
+                        font-bold
+                        tracking-[4px]
+                        mb-4">
+
+                LUXURY HOTEL
+
+            </div>
+
+
+            <h1 class="text-4xl md:text-5xl
+                       font-bold
+                       mb-4"
+                style="font-family:
+                       'Times New Roman',
+                       Times,
+                       serif;">
+
+                Lịch Sử Đặt Phòng
+
+            </h1>
+
+
+            <p class="text-gray-300
+                      max-w-2xl
+                      mx-auto
+                      leading-relaxed">
+
+                Theo dõi tất cả các kỳ nghỉ
+                và thông tin đặt phòng của bạn
+                tại Luxury Hotel.
+
+            </p>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ========================================================= -->
+    <!-- NỘI DUNG -->
+    <!-- ========================================================= -->
+
+    <main class="max-w-7xl mx-auto
+                 px-4 sm:px-6 lg:px-8
+                 py-12">
+
+
+        @if (
+            Model == null ||
+            !Model.Any()
+        )
+        {
+
+            <!-- ================================================= -->
+            <!-- CHƯA CÓ BOOKING -->
+            <!-- ================================================= -->
+
+            <div class="bg-white
+                        rounded-2xl
+                        shadow-lg
+                        border border-gray-200
+                        px-6 py-16
+                        text-center
+                        max-w-2xl
+                        mx-auto">
+
+
+                <div class="w-20 h-20
+                            mx-auto
+                            rounded-full
+                            bg-yellow-50
+                            flex items-center
+                            justify-center
+                            text-yellow-600
+                            mb-6">
+
+                    <i class="fas fa-suitcase-rolling
+                              text-4xl"></i>
+
+                </div>
+
+
+                <h2 class="text-2xl
+                           font-bold
+                           text-gray-900
+                           mb-3">
+
+                    Bạn chưa có đặt phòng nào
+
+                </h2>
+
+
+                <p class="text-gray-500
+                          leading-relaxed
+                          mb-8">
+
+                    Sau khi bạn đặt phòng bằng tài khoản này,
+                    thông tin đặt phòng sẽ xuất hiện tại đây.
+
+                </p>
+
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Home",
+                            new
+                            {
+                                page = "rooms"
+                            }
+                         )"
+                   class="gold-button
+                          inline-flex
+                          items-center
+                          justify-center
+                          px-7 py-3.5
+                          rounded-xl
+                          font-bold">
+
+                    <i class="fas fa-bed mr-2"></i>
+
+                    Khám phá phòng
+
+                </a>
+
+            </div>
+
+        }
+        else
+        {
+
+            <!-- ================================================= -->
+            <!-- THỐNG KÊ -->
+            <!-- ================================================= -->
+
+            <div class="flex flex-col
+                        md:flex-row
+                        md:items-end
+                        md:justify-between
+                        gap-4
+                        mb-8">
+
+
+                <div>
+
+                    <p class="text-sm
+                              uppercase
+                              tracking-[3px]
+                              text-yellow-700
+                              font-bold
+                              mb-2">
+
+                        Các kỳ nghỉ của bạn
+
+                    </p>
+
+
+                    <h2 class="text-3xl
+                               font-bold
+                               text-gray-900">
+
+                        Danh sách đặt phòng
+
+                    </h2>
+
+                </div>
+
+
+                <div class="bg-white
+                            border border-gray-200
+                            shadow-sm
+                            rounded-xl
+                            px-5 py-3">
+
+                    <span class="text-gray-500">
+
+                        Tổng số:
+
+                    </span>
+
+                    <strong class="text-yellow-700
+                                   text-xl
+                                   ml-2">
+
+                        @Model.Count()
+
+                    </strong>
+
+                    <span class="text-gray-500">
+
+                        đơn đặt phòng
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- DANH SÁCH BOOKING -->
+            <!-- ================================================= -->
+
+            <div class="space-y-8">
+
+
+                @foreach (
+                    var booking
+                    in Model
+                )
+                {
+
+                    var status =
+                        (
+                            booking.Status ??
+                            ""
+                        ).Trim();
+
+
+                    var statusClass =
+                        "status-default";
+
+
+                    var statusIcon =
+                        "fa-circle-info";
+
+
+                    if (
+                        status ==
+                        "Chờ xác nhận"
+                    )
+                    {
+                        statusClass =
+                            "status-waiting";
+
+                        statusIcon =
+                            "fa-clock";
+                    }
+                    else if (
+                        status ==
+                        "Đã xác nhận"
+                    )
+                    {
+                        statusClass =
+                            "status-confirmed";
+
+                        statusIcon =
+                            "fa-circle-check";
+                    }
+                    else if (
+                        status ==
+                        "Đã nhận phòng"
+                    )
+                    {
+                        statusClass =
+                            "status-checkin";
+
+                        statusIcon =
+                            "fa-key";
+                    }
+                    else if (
+                        status ==
+                        "Hoàn tất"
+                    )
+                    {
+                        statusClass =
+                            "status-completed";
+
+                        statusIcon =
+                            "fa-circle-check";
+                    }
+                    else if (
+                        status ==
+                        "Đã hủy"
+                    )
+                    {
+                        statusClass =
+                            "status-cancelled";
+
+                        statusIcon =
+                            "fa-circle-xmark";
+                    }
+
+
+                    var nights =
+                        (
+                            booking.CheckOutDate.Date -
+                            booking.CheckInDate.Date
+                        ).Days;
+
+
+                    if (nights < 1)
+                    {
+                        nights = 1;
+                    }
+
+
+                    <article class="booking-card
+                                    rounded-2xl
+                                    overflow-hidden">
+
+
+                        <div class="grid
+                                    grid-cols-1
+                                    lg:grid-cols-[340px_1fr]">
+
+
+                            <!-- ================================= -->
+                            <!-- ẢNH PHÒNG -->
+                            <!-- ================================= -->
+
+                            <div class="relative">
+
+
+                                @if (
+                                    !string.IsNullOrWhiteSpace(
+                                        booking.ImageUrl
+                                    )
+                                )
+                                {
+
+                                    <img src="@booking.ImageUrl"
+                                         alt="@booking.RoomName"
+                                         class="room-image
+                                                lg:h-full" />
+
+                                }
+                                else
+                                {
+
+                                    <div class="room-image
+                                                lg:h-full
+                                                bg-gray-200
+                                                flex items-center
+                                                justify-center
+                                                text-gray-400">
+
+                                        <i class="fas fa-image
+                                                  text-5xl"></i>
+
+                                    </div>
+
+                                }
+
+
+                                <div class="absolute
+                                            top-4 left-4
+                                            bg-black/70
+                                            text-white
+                                            px-4 py-2
+                                            rounded-lg
+                                            text-sm
+                                            font-bold">
+
+                                    #@booking.BookingId
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ================================= -->
+                            <!-- THÔNG TIN -->
+                            <!-- ================================= -->
+
+                            <div class="p-6 md:p-8">
+
+
+                                <!-- TÊN + TRẠNG THÁI -->
+
+                                <div class="flex
+                                            flex-col
+                                            sm:flex-row
+                                            sm:items-start
+                                            sm:justify-between
+                                            gap-4
+                                            mb-6">
+
+
+                                    <div>
+
+                                        <p class="text-yellow-700
+                                                  text-xs
+                                                  tracking-[2px]
+                                                  uppercase
+                                                  font-bold
+                                                  mb-2">
+
+                                            @booking.RoomType
+
+                                        </p>
+
+
+                                        <h3 class="text-2xl
+                                                   md:text-3xl
+                                                   font-bold
+                                                   text-gray-900">
+
+                                            @booking.RoomName
+
+                                        </h3>
+
+
+                                        <p class="text-gray-400
+                                                  text-sm
+                                                  mt-2">
+
+                                            Đặt ngày:
+
+                                            @booking.CreatedAt.ToString(
+                                                "dd/MM/yyyy HH:mm"
+                                            )
+
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="status-badge
+                                                 @statusClass">
+
+                                        <i class="fas
+                                                  @statusIcon
+                                                  mr-2"></i>
+
+                                        @(string.IsNullOrWhiteSpace(status)
+                                            ? "Chưa cập nhật"
+                                            : status)
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- ================================= -->
+                                <!-- THÔNG TIN NGÀY -->
+                                <!-- ================================= -->
+
+                                <div class="grid
+                                            grid-cols-1
+                                            sm:grid-cols-3
+                                            gap-4
+                                            mb-5">
+
+
+                                    <div class="info-box
+                                                rounded-xl
+                                                p-4">
+
+                                        <p class="text-gray-500
+                                                  text-xs
+                                                  uppercase
+                                                  tracking-wide
+                                                  mb-1">
+
+                                            Nhận phòng
+
+                                        </p>
+
+                                        <p class="font-bold
+                                                  text-gray-900">
+
+                                            <i class="fas
+                                                      fa-calendar-check
+                                                      text-yellow-600
+                                                      mr-2"></i>
+
+                                            @booking.CheckInDate.ToString(
+                                                "dd/MM/yyyy"
+                                            )
+
+                                        </p>
+
+                                    </div>
+
+
+
+                                    <div class="info-box
+                                                rounded-xl
+                                                p-4">
+
+                                        <p class="text-gray-500
+                                                  text-xs
+                                                  uppercase
+                                                  tracking-wide
+                                                  mb-1">
+
+                                            Trả phòng
+
+                                        </p>
+
+                                        <p class="font-bold
+                                                  text-gray-900">
+
+                                            <i class="fas
+                                                      fa-calendar-xmark
+                                                      text-yellow-600
+                                                      mr-2"></i>
+
+                                            @booking.CheckOutDate.ToString(
+                                                "dd/MM/yyyy"
+                                            )
+
+                                        </p>
+
+                                    </div>
+
+
+
+                                    <div class="info-box
+                                                rounded-xl
+                                                p-4">
+
+                                        <p class="text-gray-500
+                                                  text-xs
+                                                  uppercase
+                                                  tracking-wide
+                                                  mb-1">
+
+                                            Thời gian lưu trú
+
+                                        </p>
+
+                                        <p class="font-bold
+                                                  text-gray-900">
+
+                                            <i class="fas
+                                                      fa-moon
+                                                      text-yellow-600
+                                                      mr-2"></i>
+
+                                            @nights đêm
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- ================================= -->
+                                <!-- KHÁCH / PHÒNG / THANH TOÁN -->
+                                <!-- ================================= -->
+
+                                <div class="grid
+                                            grid-cols-1
+                                            sm:grid-cols-3
+                                            gap-4
+                                            mb-6">
+
+
+                                    <div>
+
+                                        <p class="text-gray-500
+                                                  text-sm
+                                                  mb-1">
+
+                                            <i class="fas
+                                                      fa-users
+                                                      mr-2
+                                                      text-yellow-600"></i>
+
+                                            Số khách
+
+                                        </p>
+
+                                        <strong class="text-gray-900">
+
+                                            @booking.GuestCount người
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <p class="text-gray-500
+                                                  text-sm
+                                                  mb-1">
+
+                                            <i class="fas
+                                                      fa-door-open
+                                                      mr-2
+                                                      text-yellow-600"></i>
+
+                                            Số phòng
+
+                                        </p>
+
+                                        <strong class="text-gray-900">
+
+                                            @booking.RoomCount phòng
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <p class="text-gray-500
+                                                  text-sm
+                                                  mb-1">
+
+                                            <i class="fas
+                                                      fa-credit-card
+                                                      mr-2
+                                                      text-yellow-600"></i>
+
+                                            Thanh toán
+
+                                        </p>
+
+                                        <strong class="text-gray-900">
+
+                                            @(string.IsNullOrWhiteSpace(
+                                                booking.PaymentMethod
+                                              )
+                                                ? "Chưa cập nhật"
+                                                : booking.PaymentMethod)
+
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- ================================= -->
+                                <!-- TỔNG TIỀN -->
+                                <!-- ================================= -->
+
+                                <div class="border-t
+                                            border-gray-200
+                                            pt-5
+                                            flex
+                                            flex-col
+                                            sm:flex-row
+                                            sm:items-center
+                                            sm:justify-between
+                                            gap-3">
+
+
+                                    <div>
+
+                                        <p class="text-gray-500
+                                                  text-sm">
+
+                                            Tổng thanh toán
+
+                                        </p>
+
+
+                                        <p class="text-2xl
+                                                  font-extrabold
+                                                  text-yellow-700">
+
+                                            @booking.TotalAmount.ToString(
+                                                "N0"
+                                            )đ
+
+                                        </p>
+
+                                    </div>
+
+
+                                    <div class="flex
+            flex-wrap
+            items-center
+            justify-end
+            gap-3">
+
+
+                                        <span class="text-sm
+                 text-gray-400">
+
+                                            <i class="fas
+                  fa-shield-halved
+                  mr-1">
+                                            </i>
+
+                                            Mã đặt phòng
+                                            #@booking.BookingId
+
+                                        </span>
+
+
+                                        <a href="@Url.Action(
+                "Details",
+                "BookingHistory",
+                new
+                {
+                    id = booking.BookingId
+                }
+             )"
+                                           class="inline-flex
+              items-center
+              justify-center
+              bg-yellow-500
+              hover:bg-yellow-600
+              text-gray-900
+              font-bold
+              px-5
+              py-2.5
+              rounded-lg
+              transition">
+
+                                            <i class="fas
+                  fa-eye
+                  mr-2">
+                                            </i>
+
+                                            Xem chi tiết
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                }
+
+            </div>
+
+        }
+
+    </main>
+
+
+
+    <!-- ========================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================= -->
+
+    <footer class="mt-12
+                   bg-[#0d0a05]
+                   text-gray-400
+                   py-8">
+
+        <div class="max-w-7xl
+                    mx-auto
+                    px-4
+                    text-center
+                    text-sm">
+
+            <i class="fas fa-crown
+                      text-yellow-500
+                      mr-2"></i>
+
+            Luxury Hotel
+
+            <span class="mx-2">•</span>
+
+            Lịch sử đặt phòng của bạn
+
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>

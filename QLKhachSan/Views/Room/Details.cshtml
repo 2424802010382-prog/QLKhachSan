@@ -1,0 +1,1012 @@
+﻿@model QLKhachSan.Models.Room
+
+@{
+    Layout = null;
+
+    string roomType =
+        (Model.RoomType ?? "")
+        .Trim()
+        .ToUpperInvariant();
+
+    string slogan = "";
+    string detailedDescription = "";
+
+    string highlight1 = "";
+    string highlight2 = "";
+    string highlight3 = "";
+
+    string[] amenities =
+        new string[] { };
+
+
+    // =========================================================
+    // DELUXE
+    // =========================================================
+    if (roomType == "DELUXE")
+    {
+        slogan =
+            "Không gian sang trọng dành cho kỳ nghỉ thư thái";
+
+        detailedDescription =
+            "Phòng Deluxe mang đến không gian nghỉ dưỡng hiện đại, "
+            + "ấm cúng và tiện nghi. Thiết kế phòng chú trọng sự thoải mái, "
+            + "phù hợp cho khách đi công tác, cặp đôi hoặc những chuyến nghỉ dưỡng ngắn ngày. "
+            + "Không gian được bố trí hài hòa giúp bạn thư giãn sau một ngày khám phá thành phố.";
+
+        highlight1 = "Không gian hiện đại";
+        highlight2 = "Phù hợp 1 - 2 khách";
+        highlight3 = "Tiện nghi đầy đủ";
+
+        amenities = new string[]
+        {
+            "Giường ngủ cao cấp",
+            "Điều hòa không khí",
+            "Wi-Fi tốc độ cao",
+            "TV màn hình phẳng",
+            "Tủ quần áo",
+            "Bàn làm việc",
+            "Phòng tắm riêng",
+            "Máy sấy tóc",
+            "Nước uống miễn phí",
+            "Dịch vụ phòng"
+                };
+    }
+
+
+    // =========================================================
+    // PREMIUM
+    // =========================================================
+    else if (roomType == "PREMIUM")
+    {
+        slogan =
+            "Trải nghiệm nghỉ dưỡng cao cấp và riêng tư";
+
+        detailedDescription =
+            "Phòng Premium được thiết kế dành cho khách hàng yêu thích "
+            + "không gian tinh tế và thoải mái hơn. Nội thất sang trọng, "
+            + "khu vực nghỉ ngơi rộng rãi cùng hệ thống tiện nghi hiện đại "
+            + "mang đến trải nghiệm nghỉ dưỡng thư thái trong suốt thời gian lưu trú.";
+
+        highlight1 = "Nội thất cao cấp";
+        highlight2 = "Không gian rộng rãi";
+        highlight3 = "Yên tĩnh và riêng tư";
+
+        amenities = new string[]
+        {
+            "Giường lớn cao cấp",
+            "Điều hòa không khí",
+            "Wi-Fi tốc độ cao",
+            "Smart TV",
+            "Minibar",
+            "Bàn làm việc",
+            "Khu vực tiếp khách",
+            "Phòng tắm riêng",
+            "Máy sấy tóc",
+            "Đồ dùng cá nhân",
+            "Dịch vụ phòng"
+                };
+    }
+
+
+    // =========================================================
+    // LUXURY BALCONY SUITE
+    // =========================================================
+    else if (roomType == "LUXURY BALCONY SUITE")
+    {
+        slogan =
+            "Suite cao cấp với ban công riêng và không gian sang trọng";
+
+        detailedDescription =
+            "Luxury Balcony Suite là lựa chọn dành cho khách hàng muốn "
+            + "tận hưởng trải nghiệm nghỉ dưỡng cao cấp. Phòng sở hữu không gian rộng, "
+            + "khu vực nghỉ ngơi và tiếp khách được bố trí tinh tế, kết hợp ban công riêng "
+            + "giúp bạn tận hưởng không khí bên ngoài ngay tại phòng.";
+
+        highlight1 = "Ban công riêng";
+        highlight2 = "Không gian Suite";
+        highlight3 = "Nội thất sang trọng";
+
+        amenities = new string[]
+        {
+            "Giường King cao cấp",
+            "Ban công riêng",
+            "Khu vực tiếp khách",
+            "Sofa thư giãn",
+            "Smart TV",
+            "Wi-Fi tốc độ cao",
+            "Điều hòa không khí",
+            "Minibar",
+            "Phòng tắm cao cấp",
+            "Áo choàng tắm",
+            "Máy sấy tóc",
+            "Dịch vụ phòng"
+                };
+    }
+
+
+    // =========================================================
+    // PHÒNG TỔNG THỐNG
+    // =========================================================
+    else if (roomType == "PHÒNG TỔNG THỐNG")
+    {
+        slogan =
+            "Không gian nghỉ dưỡng đẳng cấp dành cho những trải nghiệm đặc biệt";
+
+        detailedDescription =
+            "Phòng Tổng Thống là hạng phòng cao cấp nhất của Luxury Hotel. "
+            + "Không gian được thiết kế rộng rãi, sang trọng và riêng tư, "
+            + "phù hợp với khách VIP, gia đình hoặc những kỳ nghỉ đặc biệt. "
+            + "Từng khu vực trong phòng được bố trí nhằm mang lại sự tiện nghi "
+            + "và trải nghiệm nghỉ dưỡng cao cấp.";
+
+        highlight1 = "Hạng phòng cao cấp nhất";
+        highlight2 = "Không gian đặc biệt rộng";
+        highlight3 = "Phù hợp khách VIP";
+
+        amenities = new string[]
+        {
+            "Phòng ngủ cao cấp",
+            "Phòng khách riêng",
+            "Sofa cao cấp",
+            "Bàn ăn",
+            "Smart TV",
+            "Wi-Fi tốc độ cao",
+            "Điều hòa",
+            "Minibar",
+            "Phòng tắm sang trọng",
+            "Bồn tắm",
+            "Áo choàng tắm",
+            "Dịch vụ phòng ưu tiên"
+                };
+    }
+
+
+    // =========================================================
+    // STANDARD
+    // =========================================================
+    else if (roomType == "STANDARD")
+    {
+        slogan =
+            "Lựa chọn tiện nghi với mức giá hợp lý";
+
+        detailedDescription =
+            "Phòng Standard là lựa chọn phù hợp cho khách hàng cần một "
+            + "không gian nghỉ ngơi tiện nghi với mức chi phí hợp lý. "
+            + "Phòng được trang bị các tiện ích thiết yếu, sạch sẽ và thoải mái, "
+            + "phù hợp cho các chuyến công tác hoặc lưu trú ngắn ngày.";
+
+        highlight1 = "Giá hợp lý";
+        highlight2 = "Tiện nghi thiết yếu";
+        highlight3 = "Phù hợp lưu trú ngắn ngày";
+
+        amenities = new string[]
+        {
+            "Giường ngủ",
+            "Điều hòa",
+            "Wi-Fi miễn phí",
+            "TV",
+            "Bàn làm việc",
+            "Tủ quần áo",
+            "Phòng tắm riêng",
+            "Nước uống",
+            "Đồ dùng cá nhân"
+                };
+    }
+
+
+    // =========================================================
+    // SUPERIOR
+    // =========================================================
+    else if (roomType == "SUPERIOR")
+    {
+        slogan =
+            "Thoải mái hơn cho chuyến nghỉ dưỡng của bạn";
+
+        detailedDescription =
+            "Phòng Superior mang đến không gian thoải mái hơn so với phòng tiêu chuẩn, "
+            + "kết hợp giữa thiết kế trang nhã và các tiện nghi cần thiết. "
+            + "Đây là lựa chọn phù hợp cho khách muốn cân bằng giữa chi phí "
+            + "và trải nghiệm nghỉ dưỡng.";
+
+        highlight1 = "Không gian thoải mái";
+        highlight2 = "Thiết kế trang nhã";
+        highlight3 = "Giá trị tốt";
+
+        amenities = new string[]
+        {
+            "Giường cao cấp",
+            "Điều hòa",
+            "Wi-Fi tốc độ cao",
+            "TV màn hình phẳng",
+            "Bàn làm việc",
+            "Minibar",
+            "Tủ quần áo",
+            "Phòng tắm riêng",
+            "Máy sấy tóc",
+            "Nước uống miễn phí"
+                };
+    }
+
+
+    // =========================================================
+    // TWIN ROOM
+    // =========================================================
+    else if (roomType == "TWIN ROOM")
+    {
+        slogan =
+            "Hai giường riêng, thuận tiện cho bạn bè và khách công tác";
+
+        detailedDescription =
+            "Twin Room được bố trí hai giường ngủ riêng biệt, phù hợp cho "
+            + "hai khách đi cùng nhau nhưng muốn có không gian nghỉ ngơi độc lập. "
+            + "Phòng thích hợp cho bạn bè, đồng nghiệp hoặc khách đi công tác.";
+
+        highlight1 = "Hai giường riêng";
+        highlight2 = "Phù hợp 2 khách";
+        highlight3 = "Tiện lợi cho khách công tác";
+
+        amenities = new string[]
+        {
+            "Hai giường đơn",
+            "Điều hòa",
+            "Wi-Fi tốc độ cao",
+            "TV",
+            "Bàn làm việc",
+            "Tủ quần áo",
+            "Phòng tắm riêng",
+            "Máy sấy tóc",
+            "Nước uống miễn phí"
+                };
+    }
+
+
+    // =========================================================
+    // FAMILY ROOM
+    // =========================================================
+    else if (roomType == "FAMILY ROOM")
+    {
+        slogan =
+            "Không gian rộng rãi dành cho cả gia đình";
+
+        detailedDescription =
+            "Family Room được thiết kế dành cho gia đình hoặc nhóm khách "
+            + "cần không gian rộng rãi hơn. Cách bố trí phòng chú trọng sự thoải mái, "
+            + "thuận tiện cho nhiều thành viên cùng lưu trú trong một không gian.";
+
+        highlight1 = "Phù hợp gia đình";
+        highlight2 = "Không gian rộng";
+        highlight3 = "Sức chứa lớn";
+
+        amenities = new string[]
+        {
+            "Không gian ngủ rộng",
+            "Điều hòa",
+            "Wi-Fi tốc độ cao",
+            "Smart TV",
+            "Khu vực sinh hoạt",
+            "Tủ quần áo lớn",
+            "Phòng tắm riêng",
+            "Máy sấy tóc",
+            "Nước uống miễn phí",
+            "Dịch vụ phòng"
+                };
+    }
+
+
+    // =========================================================
+    // TRƯỜNG HỢP KHÁC
+    // =========================================================
+    else
+    {
+        slogan =
+            "Không gian nghỉ dưỡng tiện nghi tại Luxury Hotel";
+
+        detailedDescription =
+            Model.Description
+            ?? "Phòng nghỉ tiện nghi, sạch sẽ và thoải mái.";
+
+        highlight1 = "Không gian thoải mái";
+        highlight2 = "Tiện nghi đầy đủ";
+        highlight3 = "Dịch vụ tận tâm";
+
+        amenities = new string[]
+        {
+            "Điều hòa",
+            "Wi-Fi",
+            "TV",
+            "Phòng tắm riêng",
+            "Nước uống"
+                };
+    }
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        @Model.RoomName - Luxury Hotel
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, "Segoe UI", Tahoma, sans-serif;
+            background: #f8f4eb;
+            color: #2b2117;
+        }
+
+
+        .luxury-navbar {
+            background: #211a14;
+            border-bottom: 1px solid #d4af37;
+        }
+
+
+        .gold-text {
+            color: #d4af37;
+        }
+
+
+        .room-hero {
+            position: relative;
+            min-height: 580px;
+            background-image:
+                linear-gradient(
+                    rgba(15, 10, 6, 0.42),
+                    rgba(15, 10, 6, 0.72)
+                ),
+                url('@Model.ImageUrl');
+
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+        }
+
+
+        .room-hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+
+        .room-title {
+            font-family: Arial, "Segoe UI", Tahoma, sans-serif;
+            font-size: clamp(2.4rem, 5vw, 4.8rem);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: 0;
+            word-spacing: 0;
+        }
+
+
+        .detail-card {
+            background: #fffdf8;
+            border: 1px solid #e7dbc1;
+            box-shadow: 0 15px 40px rgba(63, 43, 20, 0.08);
+            border-radius: 18px;
+        }
+
+
+        .highlight-card {
+            background: #fffaf0;
+            border: 1px solid #e6d3a0;
+            border-radius: 16px;
+        }
+
+
+        .amenity-item {
+            background: #fff;
+            border: 1px solid #eadfc8;
+            border-radius: 12px;
+            transition: 0.25s;
+        }
+
+
+        .amenity-item:hover {
+            transform: translateY(-3px);
+            border-color: #d4af37;
+            box-shadow: 0 10px 25px rgba(70, 48, 18, 0.10);
+        }
+
+
+        .gold-button {
+            background: linear-gradient(
+                135deg,
+                #d4af37,
+                #efc85a
+            );
+
+            color: #21170f;
+            border: 1px solid #e4bf4f;
+            transition: 0.25s;
+        }
+
+
+        .gold-button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(
+                135deg,
+                #c29a29,
+                #e7ba43
+            );
+        }
+
+
+        .outline-button {
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            background: #211a14;
+            transition: 0.25s;
+        }
+
+
+        .outline-button:hover {
+            background: #d4af37;
+            color: #21170f;
+        }
+
+
+        .price-box {
+            background: linear-gradient(
+                135deg,
+                #21170f,
+                #3c2b1b
+            );
+
+            color: white;
+            border: 1px solid #d4af37;
+        }
+
+
+        @@media (max-width: 768px) {
+
+            .room-hero {
+                min-height: 500px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <nav class="luxury-navbar text-white px-4 py-4">
+
+        <div class="container mx-auto
+                    flex justify-between items-center">
+
+
+            <a href="@Url.Action("Index", "Home")"
+               class="flex items-center gap-3">
+
+
+                <div class="w-12 h-12
+                            border-2 border-yellow-500
+                            flex items-center justify-center
+                            text-yellow-400 text-xl">
+
+                    <i class="fas fa-crown"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h1 class="text-xl font-bold
+                               tracking-wider gold-text">
+
+                        LUXURY HOTEL
+
+                    </h1>
+
+                    <p class="text-[10px]
+                              tracking-[3px]
+                              text-yellow-300">
+
+                        LUXURY &amp; COMFORT
+
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <a href="@Url.Action("Index", "Home")"
+               class="outline-button
+                      px-5 py-2 rounded-lg
+                      font-semibold">
+
+                <i class="fas fa-arrow-left mr-2"></i>
+
+                Trang chủ
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ========================================================= -->
+    <!-- ẢNH LỚN CỦA PHÒNG -->
+    <!-- ========================================================= -->
+
+    <section class="room-hero">
+
+        <div class="room-hero-content">
+
+            <div class="container mx-auto
+                        px-4 pb-16">
+
+
+                <p class="text-yellow-400
+                          tracking-[5px]
+                          font-bold text-sm mb-4">
+
+                    @Model.RoomType
+
+                </p>
+
+
+                <h2 class="room-title
+                           text-white mb-5">
+
+                    @Model.RoomName
+
+                </h2>
+
+
+                <p class="text-gray-100
+                          text-lg md:text-xl
+                          max-w-3xl">
+
+                    @slogan
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================= -->
+    <!-- NỘI DUNG CHI TIẾT -->
+    <!-- ========================================================= -->
+
+    <main class="container mx-auto
+                 px-4 py-16">
+
+
+        <div class="grid grid-cols-1
+                    lg:grid-cols-3 gap-10">
+
+
+            <!-- ================================================= -->
+            <!-- CỘT TRÁI -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-2">
+
+
+                <div class="detail-card p-8 md:p-10 mb-8">
+
+
+                    <p class="gold-text
+                              tracking-[4px]
+                              font-bold text-xs mb-3">
+
+                        GIỚI THIỆU PHÒNG
+
+                    </p>
+
+
+                    <h3 class="text-3xl md:text-4xl
+                               font-bold mb-6">
+
+                        Trải Nghiệm @Model.RoomName
+
+                    </h3>
+
+
+                    <p class="text-gray-600
+                              text-lg leading-8 mb-5">
+
+                        @detailedDescription
+
+                    </p>
+
+
+                    @if (!string.IsNullOrWhiteSpace(
+                            Model.Description))
+                    {
+
+                        <p class="text-gray-600
+                                  leading-8">
+
+                            @Model.Description
+
+                        </p>
+
+                    }
+
+                </div>
+
+
+
+                <!-- ============================================= -->
+                <!-- ĐẶC ĐIỂM -->
+                <!-- ============================================= -->
+
+                <div class="mb-10">
+
+                    <p class="gold-text
+                              tracking-[4px]
+                              font-bold text-xs mb-3">
+
+                        ĐIỂM NỔI BẬT
+
+                    </p>
+
+
+                    <h3 class="text-3xl
+                               font-bold mb-6">
+
+                        Không Gian Nghỉ Dưỡng
+
+                    </h3>
+
+
+                    <div class="grid grid-cols-1
+                                md:grid-cols-3 gap-5">
+
+
+                        <div class="highlight-card
+                                    p-6 text-center">
+
+                            <i class="fas fa-bed
+                                      text-3xl gold-text
+                                      mb-4"></i>
+
+                            <p class="font-bold">
+
+                                @highlight1
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="highlight-card
+                                    p-6 text-center">
+
+                            <i class="fas fa-users
+                                      text-3xl gold-text
+                                      mb-4"></i>
+
+                            <p class="font-bold">
+
+                                @highlight2
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="highlight-card
+                                    p-6 text-center">
+
+                            <i class="fas fa-star
+                                      text-3xl gold-text
+                                      mb-4"></i>
+
+                            <p class="font-bold">
+
+                                @highlight3
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ============================================= -->
+                <!-- TIỆN NGHI -->
+                <!-- ============================================= -->
+
+                <div>
+
+                    <p class="gold-text
+                              tracking-[4px]
+                              font-bold text-xs mb-3">
+
+                        TIỆN NGHI PHÒNG
+
+                    </p>
+
+
+                    <h3 class="text-3xl
+                               font-bold mb-6">
+
+                        Tiện Nghi Được Trang Bị
+
+                    </h3>
+
+
+                    <div class="grid grid-cols-1
+                                sm:grid-cols-2
+                                md:grid-cols-3
+                                gap-4">
+
+
+                        @foreach (
+                            var amenity
+                            in amenities
+                        )
+                        {
+
+                            <div class="amenity-item
+                                        px-5 py-4
+                                        flex items-center gap-3">
+
+
+                                <i class="fas fa-check-circle
+                                          gold-text"></i>
+
+
+                                <span class="font-medium">
+
+                                    @amenity
+
+                                </span>
+
+                            </div>
+
+                        }
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- CỘT PHẢI - GIÁ -->
+            <!-- ================================================= -->
+
+            <div>
+
+
+                <div class="price-box
+                            rounded-2xl
+                            p-8
+                            lg:sticky
+                            lg:top-8">
+
+
+                    <p class="text-yellow-300
+                              text-sm
+                              tracking-[3px]
+                              mb-3">
+
+                        GIÁ PHÒNG
+
+                    </p>
+
+
+                    <div class="mb-7">
+
+                        <span class="text-4xl
+                                     font-bold
+                                     text-yellow-400">
+
+                            @Model.Price.ToString("N0")đ
+
+                        </span>
+
+                        <span class="text-gray-300">
+
+                            / đêm
+
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="border-t
+                                border-white/20
+                                py-5 space-y-4">
+
+
+                        <div class="flex
+                                    justify-between">
+
+                            <span class="text-gray-300">
+
+                                Loại phòng
+
+                            </span>
+
+                            <strong>
+
+                                @Model.RoomType
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="flex
+                                    justify-between">
+
+                            <span class="text-gray-300">
+
+                                Sức chứa
+
+                            </span>
+
+                            <strong>
+
+                                @Model.Capacity người
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="flex
+                                    justify-between">
+
+                            <span class="text-gray-300">
+
+                                Tình trạng
+
+                            </span>
+
+                            <strong class="text-green-400">
+
+                                Đang hoạt động
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <a href="@Url.Action(
+                                "Index",
+                                "Home",
+                                new {
+                                    roomId =
+                                        Model.RoomId
+                                }
+                             )"
+                       class="gold-button
+                              mt-4 w-full
+                              py-4 rounded-xl
+                              font-bold
+                              text-center
+                              block">
+
+                        <i class="fas fa-calendar-check
+                                  mr-2"></i>
+
+                        ĐẶT PHÒNG NGAY
+
+                    </a>
+
+
+
+                    <a href="@Url.Action(
+            "Index",
+            "Home",
+            new { page = "rooms" }
+         )"
+                       class="block
+                              text-center
+                              text-gray-300
+                              hover:text-yellow-400
+                              mt-5">
+
+                        <i class="fas fa-arrow-left mr-2"></i>
+
+                        Quay lại danh sách phòng
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ========================================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================================= -->
+
+    <footer class="bg-[#211a14]
+                   text-gray-300
+                   py-10 mt-8
+                   border-t
+                   border-yellow-700">
+
+
+        <div class="container mx-auto
+                    px-4 text-center">
+
+
+            <i class="fas fa-crown
+                      text-yellow-400
+                      text-2xl mb-3"></i>
+
+
+            <h3 class="text-white
+                       font-bold
+                       text-xl mb-2">
+
+                LUXURY HOTEL
+
+            </h3>
+
+
+            <p class="text-sm">
+
+                Luxury &amp; Comfort
+
+            </p>
+
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>

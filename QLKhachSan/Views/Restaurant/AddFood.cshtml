@@ -1,0 +1,503 @@
+﻿@using QLKhachSan.Models
+@using System.Collections.Generic
+
+@{
+    Layout = null;
+
+    var categories =
+        ViewBag.Categories
+        as List<RestaurantCategoryViewModel>;
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Thêm món - Luxury Hotel
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+</head>
+
+
+<body class="bg-gray-100 min-h-screen">
+
+
+    <div class="max-w-3xl
+            mx-auto
+            px-4
+            py-10">
+
+
+        <div class="bg-white
+                rounded-2xl
+                shadow-lg
+                overflow-hidden">
+
+
+            <div class="bg-[#201408]
+                    text-white
+                    px-7
+                    py-6">
+
+                <p class="text-yellow-400
+                      text-xs
+                      tracking-[3px]">
+
+                    LUXURY HOTEL RESTAURANT
+
+                </p>
+
+                <h1 class="text-3xl
+                       font-extrabold
+                       mt-2">
+
+                    Thêm món ăn
+
+                </h1>
+
+            </div>
+
+
+            <div class="p-7">
+
+
+                @if (
+                    TempData["FoodError"] != null
+                )
+                {
+                    <div class="bg-red-50
+                            border
+                            border-red-200
+                            text-red-700
+                            rounded-xl
+                            p-4
+                            mb-5">
+
+                        @TempData["FoodError"]
+
+                    </div>
+                }
+
+
+                <form action="@Url.Action(
+                  "AddFood",
+                  "Restaurant"
+              )"
+                      method="post"
+                      enctype="multipart/form-data">
+
+
+                    <!-- DANH MỤC -->
+
+                    <div class="mb-5">
+
+                        <label class="block
+                                  font-bold
+                                  mb-2">
+
+                            Danh mục *
+
+                        </label>
+
+
+                        <select name="maDanhMuc"
+                                required
+                                class="w-full
+                                   border
+                                   rounded-xl
+                                   px-4
+                                   py-3">
+
+                            <option value="">
+                                -- Chọn danh mục --
+                            </option>
+
+
+                            @if (
+                                categories != null
+                            )
+                            {
+                                foreach (
+                                    var category
+                                    in categories
+                                )
+                                {
+                                    <option value="@category.MaDanhMuc">
+
+                                        @category.TenDanhMuc
+
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- TÊN -->
+
+                    <div class="mb-5">
+
+                        <label class="block
+                                  font-bold
+                                  mb-2">
+
+                            Tên món *
+
+                        </label>
+
+                        <input type="text"
+                               name="tenMonAn"
+                               required
+                               maxlength="150"
+                               class="w-full
+                                  border
+                                  rounded-xl
+                                  px-4
+                                  py-3"
+                               placeholder="Ví dụ: Bò Wagyu sốt tiêu đen" />
+
+                    </div>
+
+
+                    <!-- MÔ TẢ -->
+
+                    <div class="mb-5">
+
+                        <label class="block
+                                  font-bold
+                                  mb-2">
+
+                            Mô tả
+
+                        </label>
+
+                        <textarea name="moTa"
+                                  rows="4"
+                                  class="w-full
+                                     border
+                                     rounded-xl
+                                     px-4
+                                     py-3"
+                                  placeholder="Mô tả món ăn..."></textarea>
+
+                    </div>
+
+
+                    <div class="grid
+                            grid-cols-1
+                            md:grid-cols-2
+                            gap-5">
+
+
+                        <!-- GIÁ -->
+
+                        <div>
+
+                            <label class="block
+                                      font-bold
+                                      mb-2">
+
+                                Giá *
+
+                            </label>
+
+                            <input type="number"
+                                   name="gia"
+                                   min="1000"
+                                   step="1000"
+                                   required
+                                   class="w-full
+                                      border
+                                      rounded-xl
+                                      px-4
+                                      py-3"
+                                   placeholder="350000" />
+
+                        </div>
+
+
+                        <!-- ĐƠN VỊ -->
+
+                        <div>
+
+                            <label class="block
+                                      font-bold
+                                      mb-2">
+
+                                Đơn vị
+
+                            </label>
+
+                            <input type="text"
+                                   name="donVi"
+                                   value="phần"
+                                   class="w-full
+                                      border
+                                      rounded-xl
+                                      px-4
+                                      py-3"
+                                   placeholder="phần / tô / ly..." />
+
+                        </div>
+
+
+                        <!-- TIME -->
+
+                        <div>
+
+                            <label class="block
+                                      font-bold
+                                      mb-2">
+
+                                Thời gian chuẩn bị
+
+                            </label>
+
+                            <input type="number"
+                                   name="thoiGianChuanBi"
+                                   min="1"
+                                   max="300"
+                                   class="w-full
+                                      border
+                                      rounded-xl
+                                      px-4
+                                      py-3"
+                                   placeholder="20 phút" />
+
+                        </div>
+
+
+                        <!-- IMAGE -->
+
+                        <div>
+
+                            <label class="block
+              font-bold
+              mb-2">
+
+                                Ảnh món
+
+                            </label>
+
+
+                            <input type="file"
+                                   id="hinhAnhFile"
+                                   name="hinhAnhFile"
+                                   accept=".jpg,.jpeg,.png,.webp"
+                                   onchange="previewFoodImage(event)"
+                                   class="w-full
+              border
+              rounded-xl
+              px-4
+              py-3
+              bg-white" />
+
+
+                            <p class="text-xs
+          text-gray-400
+          mt-2">
+
+                                JPG, JPEG, PNG hoặc WEBP.
+                                Tối đa 2MB.
+
+                            </p>
+
+
+                            <div id="foodImagePreviewBox"
+                                 class="hidden
+            mt-4">
+
+                                <p class="font-semibold
+              text-sm
+              mb-2">
+
+                                    Xem trước:
+
+                                </p>
+
+                                <img id="foodImagePreview"
+                                     src=""
+                                     class="w-full
+                max-w-xs
+                h-48
+                object-cover
+                rounded-xl
+                border" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURED -->
+
+                    <label class="flex
+                              items-center
+                              gap-3
+                              mt-6
+                              bg-yellow-50
+                              border
+                              border-yellow-200
+                              rounded-xl
+                              p-4">
+
+                        <input type="checkbox"
+                               name="noiBat"
+                               value="true"
+                               class="w-5 h-5" />
+
+                        <span class="font-semibold">
+
+                            Đánh dấu là món nổi bật
+
+                        </span>
+
+                    </label>
+
+
+                    <!-- ACTION -->
+
+                    <div class="flex
+                            gap-3
+                            mt-7">
+
+                        <a href="@Url.Action(
+                                "ManageFoods",
+                                "Restaurant"
+                             )"
+                           class="border
+                              rounded-xl
+                              px-6
+                              py-3
+                              font-bold">
+
+                            Quay lại
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="flex-1
+                                   bg-yellow-500
+                                   hover:bg-yellow-600
+                                   font-extrabold
+                                   rounded-xl
+                                   py-3">
+
+                            <i class="fas
+                                  fa-plus
+                                  mr-2">
+                            </i>
+
+                            THÊM MÓN
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function previewFoodImage(event) {
+
+            const file =
+                event.target.files[0];
+
+
+            const preview =
+                document.getElementById(
+                    'foodImagePreview'
+                );
+
+
+            const box =
+                document.getElementById(
+                    'foodImagePreviewBox'
+                );
+
+
+            if (!file) {
+
+                box.classList.add(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            if (
+                file.size >
+                2 * 1024 * 1024
+            ) {
+                alert(
+                    'Ảnh không được vượt quá 2MB.'
+                );
+
+
+                event.target.value =
+                    '';
+
+
+                box.classList.add(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (e) {
+
+                    preview.src =
+                        e.target.result;
+
+
+                    box.classList.remove(
+                        'hidden'
+                    );
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+
+    </script>
+</body>
+
+</html>

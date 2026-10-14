@@ -1,0 +1,763 @@
+﻿@model IEnumerable<QLKhachSan.Models.RestaurantOrderHistoryViewModel>
+
+@using System.Linq
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Quản lý đơn món - Luxury Hotel
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+</head>
+
+
+<body class="bg-gray-100
+             min-h-screen">
+
+
+    <!-- HEADER -->
+
+    <header class="bg-[#1c1108]
+                   text-white
+                   shadow-lg">
+
+        <div class="max-w-7xl
+                    mx-auto
+                    px-5
+                    py-4
+                    flex
+                    justify-between
+                    items-center">
+
+
+            <div>
+
+                <p class="text-yellow-400
+                          text-xs
+                          tracking-[3px]">
+
+                    LUXURY HOTEL
+
+                </p>
+
+
+                <h1 class="text-xl
+                           font-extrabold">
+
+                    Quản lý đơn gọi món
+
+                </h1>
+
+            </div>
+
+
+            <div class="flex gap-3">
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Restaurant"
+                         )"
+                   class="bg-yellow-500
+                          text-black
+                          font-bold
+                          px-4
+                          py-2
+                          rounded-xl">
+
+                    Nhà hàng
+
+                </a>
+
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Admin"
+                         )"
+                   class="border
+                          border-yellow-500
+                          text-yellow-300
+                          px-4
+                          py-2
+                          rounded-xl">
+
+                    Quản trị
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <main class="max-w-7xl
+                 mx-auto
+                 p-5
+                 md:p-8">
+
+
+        <div class="mb-7">
+
+            <h2 class="text-3xl
+                       font-extrabold">
+
+                Danh sách đơn món
+
+            </h2>
+
+
+            <p class="text-gray-500 mt-1">
+
+                Xác nhận, chuẩn bị và theo dõi đơn gọi món của khách.
+
+            </p>
+
+        </div>
+
+
+
+        @if (
+            Model == null ||
+            !Model.Any()
+        )
+        {
+            <div class="bg-white
+                        rounded-2xl
+                        p-12
+                        text-center">
+
+                <i class="fas
+                          fa-bowl-food
+                          text-6xl
+                          text-gray-300">
+                </i>
+
+
+                <p class="text-xl
+                          font-bold
+                          mt-4">
+
+                    Chưa có đơn gọi món
+
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="space-y-6">
+
+                @foreach (
+                    var order
+                    in Model
+                )
+                {
+                    <article class="bg-white
+                                    rounded-2xl
+                                    shadow-sm
+                                    overflow-hidden">
+
+
+                        <!-- HEADER -->
+
+                        <div class="p-5
+                                    border-b
+                                    flex
+                                    flex-col
+                                    lg:flex-row
+                                    lg:justify-between
+                                    gap-4">
+
+
+                            <div>
+
+                                <div class="flex
+                                            items-center
+                                            gap-3">
+
+                                    <h3 class="text-2xl
+                                               font-extrabold">
+
+                                        Đơn #@order.MaDon
+
+                                    </h3>
+
+
+                                    <span class="bg-yellow-100
+                                                 text-yellow-800
+                                                 rounded-full
+                                                 px-3
+                                                 py-1
+                                                 text-xs
+                                                 font-bold">
+
+                                        @order.TrangThai
+
+                                    </span>
+
+                                </div>
+
+
+                                <p class="text-gray-500
+                                          text-sm
+                                          mt-2">
+
+                                    <i class="fas
+                                              fa-clock
+                                              mr-1">
+                                    </i>
+
+                                    @order.CreatedAt.ToString(
+                                        "dd/MM/yyyy HH:mm"
+                                    )
+
+                                </p>
+
+                            </div>
+
+
+                            <div class="text-left
+                                        lg:text-right">
+
+                                <p class="text-sm
+                                          text-gray-400">
+
+                                    Tổng đơn
+
+                                </p>
+
+
+                                <p class="text-2xl
+                                          font-extrabold
+                                          text-yellow-700">
+
+                                    @order.TongTien.ToString("N0")đ
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- BODY -->
+
+                        <div class="p-5
+                                    grid
+                                    grid-cols-1
+                                    xl:grid-cols-3
+                                    gap-6">
+
+
+                            <!-- KHÁCH -->
+
+                            <div>
+
+                                <h4 class="font-bold
+                                           mb-3">
+
+                                    <i class="fas
+                                              fa-user
+                                              text-yellow-600
+                                              mr-2">
+                                    </i>
+
+                                    Khách hàng
+
+                                </h4>
+
+
+                                <div class="space-y-2
+                                            text-sm">
+
+                                    <p>
+
+                                        <span class="text-gray-400">
+                                            Họ tên:
+                                        </span>
+
+                                        <strong>
+                                            @order.HoTen
+                                        </strong>
+
+                                    </p>
+
+
+                                    <p>
+
+                                        <span class="text-gray-400">
+                                            SĐT:
+                                        </span>
+
+                                        <strong>
+                                            @order.SoDienThoai
+                                        </strong>
+
+                                    </p>
+
+
+                                    <p>
+
+                                        <span class="text-gray-400">
+                                            Hình thức:
+                                        </span>
+
+                                        <strong>
+                                            @order.HinhThuc
+                                        </strong>
+
+                                    </p>
+
+
+                                    @if (
+                                        order.HinhThuc ==
+                                        "Ăn tại nhà hàng"
+                                    )
+                                    {
+                                        <p>
+                                            <span class="text-gray-400">
+                                                Bàn:
+                                            </span>
+
+                                            <strong>
+                                                @order.SoBan
+                                            </strong>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <span class="text-gray-400">
+                                                Phòng:
+                                            </span>
+
+                                            <strong>
+                                                @order.SoPhong
+                                            </strong>
+                                        </p>
+                                    }
+
+
+                                    @if (
+                                        !string.IsNullOrWhiteSpace(
+                                            order.GhiChu
+                                        )
+                                    )
+                                    {
+                                        <p>
+
+                                            <span class="text-gray-400">
+                                                Ghi chú:
+                                            </span>
+
+                                            @order.GhiChu
+
+                                        </p>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ITEMS -->
+
+                            <div>
+
+                                <h4 class="font-bold
+                                           mb-3">
+
+                                    <i class="fas
+                                              fa-utensils
+                                              text-yellow-600
+                                              mr-2">
+                                    </i>
+
+                                    Món ăn
+
+                                </h4>
+
+
+                                <div class="space-y-2">
+
+                                    @foreach (
+                                        var item
+                                        in order.Items
+                                    )
+                                    {
+                                        <div class="flex
+                                                    justify-between
+                                                    text-sm">
+
+                                            <span>
+
+                                                @item.TenMonAn
+
+                                                <strong>
+                                                    × @item.SoLuong
+                                                </strong>
+
+                                            </span>
+
+
+                                            <strong>
+
+                                                @item.ThanhTien.ToString("N0")đ
+
+                                            </strong>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- CONTROL -->
+
+                            <div>
+
+                                <h4 class="font-bold
+                                           mb-3">
+
+                                    <i class="fas
+                                              fa-gears
+                                              text-yellow-600
+                                              mr-2">
+                                    </i>
+
+                                    Xử lý đơn
+
+                                </h4>
+
+
+                                <!-- STATUS -->
+
+                                <label class="block
+                                              text-sm
+                                              font-semibold
+                                              mb-1">
+
+                                    Trạng thái đơn
+
+                                </label>
+
+
+                                <select id="status-@order.MaDon"
+                                        class="w-full
+                                               border
+                                               rounded-xl
+                                               px-3
+                                               py-2.5
+                                               mb-3">
+
+                                    @{
+                                        string[] statuses =
+                                        {
+                                            "Chờ xác nhận",
+                                            "Đã xác nhận",
+                                            "Đang chuẩn bị",
+                                            "Đang phục vụ",
+                                            "Đang giao",
+                                            "Hoàn tất",
+                                            "Đã hủy"
+                                        };
+                                    }
+
+
+                                    @foreach (
+                                        string status
+                                        in statuses
+                                    )
+                                    {
+                                        <option value="@status"
+                                                selected="@(status == order.TrangThai)">
+
+                                            @status
+
+                                        </option>
+                                    }
+
+                                </select>
+
+
+                                <button type="button"
+                                        onclick="updateOrderStatus(
+                                            @order.MaDon
+                                        )"
+                                        class="w-full
+                                               bg-yellow-500
+                                               hover:bg-yellow-600
+                                               font-bold
+                                               py-2.5
+                                               rounded-xl
+                                               mb-5">
+
+                                    Cập nhật trạng thái
+
+                                </button>
+
+
+
+                                <!-- PAYMENT -->
+
+                                <label class="block
+                                              text-sm
+                                              font-semibold
+                                              mb-1">
+
+                                    Thanh toán
+
+                                </label>
+
+
+                                <select id="payment-@order.MaDon"
+                                        class="w-full
+                                               border
+                                               rounded-xl
+                                               px-3
+                                               py-2.5
+                                               mb-3">
+
+                                    <option value="Chưa thanh toán"
+                                            selected="@(order.TrangThaiThanhToan == "Chưa thanh toán")">
+
+                                        Chưa thanh toán
+
+                                    </option>
+
+
+                                    <option value="Đã thanh toán"
+                                            selected="@(order.TrangThaiThanhToan == "Đã thanh toán")">
+
+                                        Đã thanh toán
+
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        onclick="updateOrderPayment(
+                                            @order.MaDon
+                                        )"
+                                        class="w-full
+                                               bg-green-600
+                                               hover:bg-green-700
+                                               text-white
+                                               font-bold
+                                               py-2.5
+                                               rounded-xl">
+
+                                    Xác nhận thanh toán
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+        }
+
+    </main>
+
+
+
+    <script>
+
+        // =========================================================
+        // CẬP NHẬT TRẠNG THÁI
+        // =========================================================
+
+        async function updateOrderStatus(
+            id
+        ) {
+
+            const select =
+                document.getElementById(
+                    'status-' + id
+                );
+
+
+            const status =
+                select.value;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        '@Url.Action(
+                            "UpdateOrderStatus",
+                            "Restaurant"
+                        )'
+                        +
+                        '?id='
+                        +
+                        encodeURIComponent(id)
+                        +
+                        '&status='
+                        +
+                        encodeURIComponent(status),
+                        {
+                            method:
+                                'POST'
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    alert(
+                        result.message
+                    );
+
+                    return;
+
+                }
+
+
+                alert(
+                    'Cập nhật trạng thái thành công.'
+                );
+
+
+                window.location.reload();
+
+            }
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    'Không thể cập nhật trạng thái.'
+                );
+
+            }
+
+        }
+
+
+
+        // =========================================================
+        // CẬP NHẬT THANH TOÁN
+        // =========================================================
+
+        async function updateOrderPayment(
+            id
+        ) {
+
+            const select =
+                document.getElementById(
+                    'payment-' + id
+                );
+
+
+            const status =
+                select.value;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        '@Url.Action(
+                            "UpdateOrderPayment",
+                            "Restaurant"
+                        )'
+                        +
+                        '?id='
+                        +
+                        encodeURIComponent(id)
+                        +
+                        '&status='
+                        +
+                        encodeURIComponent(status),
+                        {
+                            method:
+                                'POST'
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    alert(
+                        result.message
+                    );
+
+                    return;
+
+                }
+
+
+                alert(
+                    'Cập nhật thanh toán thành công.'
+                );
+
+
+                window.location.reload();
+
+            }
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    'Không thể cập nhật thanh toán.'
+                );
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

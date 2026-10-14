@@ -1,0 +1,4363 @@
+﻿@model QLKhachSan.Models.RestaurantIndexViewModel
+
+@using System.Globalization
+@using System.Linq
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Nhà hàng - Luxury Hotel
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
+    <style>
+
+        body {
+            background: #f8f5ee;
+            color: #2a2118;
+        }
+
+
+        .restaurant-header {
+            background: linear-gradient( 135deg, #0d0905, #2b1b0c );
+        }
+
+
+        .hero-restaurant {
+            background: linear-gradient( 135deg, #1b1108, #3d250e, #171009 );
+        }
+
+
+        .food-card {
+            background: #fffdf8;
+            border: 1px solid #ead9b4;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+
+
+            .food-card:hover {
+                transform: translateY(-5px);
+                border-color: #d7a918;
+                box-shadow: 0 18px 40px rgba(52, 35, 15, .13);
+            }
+
+
+        .category-button.active {
+            background: #d5a817;
+            color: #161009;
+            border-color: #d5a817;
+        }
+
+
+        .cart-drawer {
+            transition: transform .3s ease;
+        }
+    </style>
+
+</head>
+
+
+<body class="min-h-screen">
+
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <header class="restaurant-header
+                   text-white
+                   sticky
+                   top-0
+                   z-40
+                   shadow-xl">
+
+
+        <div class="max-w-7xl
+                    mx-auto
+                    px-4
+                    py-4
+                    flex
+                    items-center
+                    justify-between
+                    gap-4">
+
+
+            <!-- LOGO -->
+
+            <a href="@Url.Action(
+                        "Index",
+                        "Home"
+                     )"
+               class="flex
+                      items-center
+                      gap-3">
+
+
+                <div class="w-12
+                            h-12
+                            border
+                            border-yellow-500
+                            flex
+                            items-center
+                            justify-center
+                            text-yellow-400">
+
+                    <i class="fas fa-crown"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="font-extrabold
+                                text-xl">
+
+                        LUXURY HOTEL
+
+                    </div>
+
+                    <div class="text-yellow-400
+                                text-[10px]
+                                tracking-[3px]">
+
+                        RESTAURANT
+
+                    </div>
+
+                </div>
+
+            </a>
+
+
+
+            <!-- RIGHT -->
+
+            <div class="flex
+                        items-center
+                        gap-3">
+
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Home"
+                         )"
+                   class="hidden
+                          md:inline-flex
+                          items-center
+                          gap-2
+                          text-sm
+                          text-yellow-100
+                          hover:text-yellow-400">
+
+                    <i class="fas fa-house"></i>
+
+                    Trang chủ
+
+                </a>
+                @if (Session["UserId"] != null)
+                {
+                    <a href="@Url.Action(
+                "History",
+                "Restaurant"
+             )"
+                       class="hidden
+              md:inline-flex
+              items-center
+              gap-2
+              text-sm
+              text-yellow-100
+              hover:text-yellow-400">
+
+                        <i class="fas fa-clock-rotate-left"></i>
+
+                        Lịch sử gọi món
+
+                    </a>
+                }
+
+                <!-- CART BUTTON -->
+
+                <button type="button"
+                        onclick="openCart()"
+                        class="relative
+                               bg-yellow-500
+                               hover:bg-yellow-400
+                               text-black
+                               font-bold
+                               px-4
+                               py-2.5
+                               rounded-xl
+                               transition">
+
+                    <i class="fas
+                              fa-cart-shopping
+                              mr-2">
+                    </i>
+
+                    Giỏ món
+
+
+                    <span id="cartCount"
+                          class="absolute
+                                 -top-2
+                                 -right-2
+                                 min-w-6
+                                 h-6
+                                 px-1
+                                 bg-red-600
+                                 text-white
+                                 rounded-full
+                                 text-xs
+                                 flex
+                                 items-center
+                                 justify-center">
+
+                        0
+
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ========================================================= -->
+    <!-- HERO -->
+    <!-- ========================================================= -->
+
+    <section class="hero-restaurant
+                    text-white
+                    py-20
+                    px-4">
+
+
+        <div class="max-w-5xl
+                    mx-auto
+                    text-center">
+
+
+            <p class="text-yellow-400
+                      font-bold
+                      tracking-[5px]
+                      text-sm
+                      mb-4">
+
+                LUXURY HOTEL RESTAURANT
+
+            </p>
+
+
+            <h1 class="text-4xl
+                       md:text-6xl
+                       font-extrabold
+                       mb-5">
+
+                Tinh Hoa Ẩm Thực
+                <span class="text-yellow-400">
+                    Á - Âu
+                </span>
+
+            </h1>
+
+
+            <p class="max-w-2xl
+                      mx-auto
+                      text-gray-300
+                      leading-7">
+
+                Thưởng thức thực đơn đa dạng
+                được chế biến từ nguyên liệu
+                chọn lọc bởi đội ngũ đầu bếp
+                của Luxury Hotel.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================= -->
+    <!-- SEARCH + CATEGORY -->
+    <!-- ========================================================= -->
+
+    <section class="bg-white
+                    border-b
+                    border-yellow-100
+                    sticky
+                    top-[80px]
+                    z-30">
+
+
+        <div class="max-w-7xl
+                    mx-auto
+                    px-4
+                    py-5">
+
+
+            <!-- SEARCH -->
+
+            <div class="max-w-xl
+                        mx-auto
+                        relative
+                        mb-5">
+
+
+                <i class="fas
+                          fa-magnifying-glass
+                          absolute
+                          left-4
+                          top-1/2
+                          -translate-y-1/2
+                          text-gray-400">
+                </i>
+
+
+                <input type="text"
+                       id="foodSearch"
+                       oninput="applyFoodFilter()"
+                       placeholder="Tìm món ăn..."
+                       class="w-full
+                              border
+                              border-gray-300
+                              rounded-xl
+                              py-3
+                              pl-11
+                              pr-4
+                              focus:ring-2
+                              focus:ring-yellow-500
+                              focus:outline-none" />
+
+            </div>
+
+
+
+            <!-- CATEGORY -->
+
+            <div class="flex
+                        gap-3
+                        overflow-x-auto
+                        pb-1
+                        justify-start
+                        md:justify-center">
+
+
+                <button type="button"
+                        class="category-button
+                               active
+                               whitespace-nowrap
+                               border
+                               border-yellow-500
+                               rounded-full
+                               px-5
+                               py-2
+                               font-bold"
+                        data-category="all"
+                        onclick="selectCategory(this)">
+
+                    Tất cả
+
+                </button>
+
+
+                @foreach (
+                    var category
+                    in Model.Categories
+                )
+                {
+                    <button type="button"
+                            class="category-button
+                                   whitespace-nowrap
+                                   border
+                                   border-yellow-500
+                                   rounded-full
+                                   px-5
+                                   py-2
+                                   font-bold
+                                   hover:bg-yellow-50"
+                            data-category="@category.MaDanhMuc"
+                            onclick="selectCategory(this)">
+
+                        @category.TenDanhMuc
+
+                    </button>
+                }
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================= -->
+    <!-- DANH SÁCH MÓN -->
+    <!-- ========================================================= -->
+
+    <main class="max-w-7xl
+                 mx-auto
+                 px-4
+                 py-12">
+
+
+        <div class="flex
+                    flex-col
+                    md:flex-row
+                    md:items-end
+                    md:justify-between
+                    gap-4
+                    mb-8">
+
+
+            <div>
+
+                <p class="text-yellow-700
+                          font-bold
+                          tracking-[3px]
+                          text-xs">
+
+                    THỰC ĐƠN
+
+                </p>
+
+
+                <h2 class="text-3xl
+                           md:text-4xl
+                           font-extrabold
+                           mt-2">
+
+                    Khám Phá Món Ngon
+
+                </h2>
+
+            </div>
+
+
+            <p id="foodResultCount"
+               class="text-gray-500">
+
+                @Model.Foods.Count món
+
+            </p>
+
+        </div>
+
+
+
+        <!-- FOOD GRID -->
+
+        <div id="foodGrid"
+             class="grid
+                    grid-cols-1
+                    sm:grid-cols-2
+                    lg:grid-cols-3
+                    xl:grid-cols-4
+                    gap-6">
+
+
+            @foreach (
+                var food
+                in Model.Foods
+            )
+            {
+                string searchText =
+                    (
+                        (food.TenMonAn ?? "")
+                        + " "
+                        + (food.MoTa ?? "")
+                        + " "
+                        + (food.TenDanhMuc ?? "")
+                    )
+                    .ToLower();
+
+
+                <article class="food-card
+                                rounded-2xl
+                                overflow-hidden"
+                         data-food-card
+                         data-category="@food.MaDanhMuc"
+                         data-search="@searchText">
+
+
+                    <!-- IMAGE -->
+
+                    <div class="h-52
+                                bg-gradient-to-br
+                                from-yellow-100
+                                to-yellow-50
+                                relative
+                                overflow-hidden">
+
+
+                        @if (
+                            !string.IsNullOrWhiteSpace(
+                                food.HinhAnh
+                            )
+                        )
+                        {
+                            <img src="@food.HinhAnh"
+                                 alt="@food.TenMonAn"
+                                 class="w-full
+                                        h-full
+                                        object-cover" />
+                        }
+                        else
+                        {
+                            <div class="w-full
+                                        h-full
+                                        flex
+                                        items-center
+                                        justify-center
+                                        text-yellow-600
+                                        text-6xl">
+
+                                <i class="fas
+                                          fa-utensils">
+                                </i>
+
+                            </div>
+                        }
+
+
+                        <!-- CATEGORY -->
+
+                        <span class="absolute
+                                     left-4
+                                     top-4
+                                     bg-black/75
+                                     text-yellow-300
+                                     px-3
+                                     py-1
+                                     rounded-full
+                                     text-xs
+                                     font-bold">
+
+                            @food.TenDanhMuc
+
+                        </span>
+
+
+                        @if (food.NoiBat)
+                        {
+                            <span class="absolute
+                                         right-4
+                                         top-4
+                                         bg-yellow-500
+                                         text-black
+                                         px-3
+                                         py-1
+                                         rounded-full
+                                         text-xs
+                                         font-extrabold">
+
+                                <i class="fas
+                                          fa-star
+                                          mr-1">
+                                </i>
+
+                                Nổi bật
+
+                            </span>
+                        }
+
+                    </div>
+
+
+
+                    <!-- CONTENT -->
+
+                    <div class="p-5">
+
+
+                        <h3 class="text-xl
+                                   font-extrabold
+                                   text-gray-900
+                                   mb-2">
+
+                            @food.TenMonAn
+
+                        </h3>
+
+
+                        <p class="text-sm
+                                  text-gray-500
+                                  leading-6
+                                  min-h-[48px]">
+
+                            @food.MoTa
+
+                        </p>
+
+
+
+                        <!-- TIME -->
+
+                        <div class="mt-4
+                                    text-sm
+                                    text-gray-500">
+
+
+                            @if (
+                                food.ThoiGianChuanBi.HasValue
+                            )
+                            {
+                                <span>
+
+                                    <i class="fas
+                                              fa-clock
+                                              text-yellow-600
+                                              mr-1">
+                                    </i>
+
+                                    Khoảng
+                                    @food.ThoiGianChuanBi
+                                    phút
+
+                                </span>
+                            }
+
+                        </div>
+
+
+
+                        <!-- PRICE -->
+
+                        <div class="mt-5
+                                    flex
+                                    items-end
+                                    justify-between
+                                    gap-3">
+
+
+                            <div>
+
+                                <p class="text-xs
+                                          text-gray-400">
+
+                                    Giá
+
+                                </p>
+
+
+                                <p class="text-xl
+                                          font-extrabold
+                                          text-yellow-700">
+
+                                    @food.Gia.ToString("N0")đ
+
+                                </p>
+
+
+                                <p class="text-xs
+                                          text-gray-400">
+
+                                    / @food.DonVi
+
+                                </p>
+
+                            </div>
+
+
+
+                            <!-- ADD -->
+
+                            <button type="button"
+                                    class="add-food-button
+                                           bg-yellow-500
+                                           hover:bg-yellow-600
+                                           text-gray-900
+                                           font-bold
+                                           px-4
+                                           py-3
+                                           rounded-xl
+                                           transition"
+                                    data-id="@food.MaMonAn"
+                                    data-name="@food.TenMonAn"
+                                    data-price="@food.Gia.ToString(
+                                                    "0",
+                                                    CultureInfo.InvariantCulture
+                                                )"
+                                    data-unit="@food.DonVi"
+                                    onclick="addFoodFromButton(this)">
+
+                                <i class="fas
+                                          fa-plus
+                                          mr-1">
+                                </i>
+
+                                Thêm
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+
+
+
+        <!-- EMPTY -->
+
+        <div id="foodEmpty"
+             class="hidden
+                    text-center
+                    py-20">
+
+
+            <i class="fas
+                      fa-bowl-food
+                      text-6xl
+                      text-gray-300
+                      mb-5">
+            </i>
+
+
+            <h3 class="text-2xl
+                       font-bold
+                       text-gray-600">
+
+                Không tìm thấy món ăn
+
+            </h3>
+
+
+            <p class="text-gray-400
+                      mt-2">
+
+                Hãy thử từ khóa hoặc danh mục khác.
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- ========================================================= -->
+    <!-- MODAL XÁC NHẬN ĐẶT MÓN -->
+    <!-- ========================================================= -->
+
+    <div id="orderModal"
+         class="fixed
+            inset-0
+            bg-black/70
+            hidden
+            items-center
+            justify-center
+            p-4
+            z-[60]">
+
+
+        <div class="bg-white
+                max-w-2xl
+                w-full
+                max-h-[92vh]
+                overflow-y-auto
+                rounded-2xl
+                shadow-2xl
+                relative">
+
+
+            <!-- HEADER -->
+
+            <div class="bg-[#201408]
+                    text-white
+                    px-7
+                    py-6">
+
+
+                <button type="button"
+                        onclick="closeOrderModal()"
+                        class="absolute
+                           top-4
+                           right-5
+                           w-9
+                           h-9
+                           rounded-full
+                           bg-white/10
+                           hover:bg-white/20">
+
+                    <i class="fas fa-times"></i>
+
+                </button>
+
+
+                <p class="text-yellow-400
+                      text-xs
+                      tracking-[3px]
+                      font-bold">
+
+                    LUXURY HOTEL RESTAURANT
+
+                </p>
+
+
+                <h2 class="text-3xl
+                       font-extrabold
+                       mt-2">
+
+                    Xác Nhận Đặt Món
+
+                </h2>
+
+            </div>
+
+
+
+            <!-- BODY -->
+
+            <div class="p-7">
+
+
+                <!-- TỔNG -->
+
+                <div class="bg-yellow-50
+                        border
+                        border-yellow-200
+                        rounded-xl
+                        p-5
+                        flex
+                        justify-between
+                        items-center
+                        mb-7">
+
+                    <span class="font-semibold
+                             text-gray-600">
+
+                        Tổng đơn hàng
+
+                    </span>
+
+
+                    <span id="orderModalTotal"
+                          class="font-extrabold
+                             text-2xl
+                             text-yellow-700">
+
+                        0đ
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- HỌ TÊN -->
+
+                <div class="mb-5">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Họ và tên *
+
+                    </label>
+
+
+                    <input type="text"
+                           id="orderCustomerName"
+                           value="@(Session["FullName"] ?? "")"
+                           class="w-full
+                              border
+                              border-gray-300
+                              rounded-xl
+                              px-4
+                              py-3
+                              focus:ring-2
+                              focus:ring-yellow-500
+                              focus:outline-none"
+                           placeholder="Nhập họ và tên" />
+
+                </div>
+
+
+
+                <!-- PHONE -->
+
+                <div class="mb-6">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Số điện thoại *
+
+                    </label>
+
+
+                    <input type="tel"
+                           id="orderPhone"
+                           maxlength="11"
+                           class="w-full
+                              border
+                              border-gray-300
+                              rounded-xl
+                              px-4
+                              py-3
+                              focus:ring-2
+                              focus:ring-yellow-500
+                              focus:outline-none"
+                           placeholder="Ví dụ: 0901234567" />
+
+                </div>
+
+
+
+                <!-- HÌNH THỨC -->
+
+                <h3 class="font-bold
+                       text-lg
+                       mb-4">
+
+                    Bạn muốn nhận món ở đâu?
+
+                </h3>
+
+
+                <div class="grid
+                        grid-cols-1
+                        sm:grid-cols-2
+                        gap-4
+                        mb-5">
+
+
+                    <label class="border
+                              border-yellow-300
+                              rounded-xl
+                              p-4
+                              cursor-pointer
+                              hover:bg-yellow-50">
+
+                        <input type="radio"
+                               name="orderType"
+                               value="Ăn tại nhà hàng"
+                               checked
+                               onchange="updateOrderTypeFields()"
+                               class="mr-2" />
+
+                        <i class="fas
+                              fa-utensils
+                              text-yellow-600
+                              mr-2">
+                        </i>
+
+                        <strong>
+                            Ăn tại nhà hàng
+                        </strong>
+
+                    </label>
+
+
+                    <label class="border
+                              border-yellow-300
+                              rounded-xl
+                              p-4
+                              cursor-pointer
+                              hover:bg-yellow-50">
+
+                        <input type="radio"
+                               name="orderType"
+                               value="Giao lên phòng"
+                               onchange="updateOrderTypeFields()"
+                               class="mr-2" />
+
+                        <i class="fas
+                              fa-bell-concierge
+                              text-yellow-600
+                              mr-2">
+                        </i>
+
+                        <strong>
+                            Giao lên phòng
+                        </strong>
+
+                    </label>
+
+                </div>
+
+
+
+                <!-- SỐ BÀN -->
+
+                <div id="tableNumberBox"
+                     class="mb-5">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Số bàn *
+
+                    </label>
+
+
+                    <input type="text"
+                           id="orderTableNumber"
+                           maxlength="20"
+                           class="w-full
+                              border
+                              border-gray-300
+                              rounded-xl
+                              px-4
+                              py-3"
+                           placeholder="Ví dụ: Bàn 05" />
+
+                </div>
+
+
+
+                <!-- SỐ PHÒNG -->
+
+                <div id="roomNumberBox"
+                     class="hidden
+                        mb-5">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Số phòng *
+
+                    </label>
+
+
+                    <input type="text"
+                           id="orderRoomNumber"
+                           maxlength="20"
+                           class="w-full
+                              border
+                              border-gray-300
+                              rounded-xl
+                              px-4
+                              py-3"
+                           placeholder="Ví dụ: 305" />
+
+                </div>
+
+
+
+                <!-- GHI CHÚ -->
+
+                <div class="mb-5">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Ghi chú
+
+                    </label>
+
+
+                    <textarea id="orderNote"
+                              rows="3"
+                              maxlength="1000"
+                              class="w-full
+                                 border
+                                 border-gray-300
+                                 rounded-xl
+                                 px-4
+                                 py-3"
+                              placeholder="Ví dụ: Không cay, không hành..."></textarea>
+
+                </div>
+
+
+
+                <!-- PAYMENT -->
+
+                <div class="mb-7">
+
+                    <label class="block
+                              font-semibold
+                              mb-2">
+
+                        Phương thức thanh toán *
+
+                    </label>
+
+
+                    <select id="orderPaymentMethod"
+                            class="w-full
+                               border
+                               border-gray-300
+                               rounded-xl
+                               px-4
+                               py-3">
+
+                        <option value="Thanh toán khi nhận món">
+                            Thanh toán khi nhận món
+                        </option>
+
+                        <option value="Chuyển khoản">
+                            Chuyển khoản
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ERROR -->
+
+                <div id="orderError"
+                     class="hidden
+                        mb-5
+                        bg-red-50
+                        border
+                        border-red-200
+                        text-red-700
+                        rounded-xl
+                        px-4
+                        py-3">
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button type="button"
+                        id="placeOrderButton"
+                        onclick="submitRestaurantOrder()"
+                        class="w-full
+                           bg-yellow-500
+                           hover:bg-yellow-600
+                           text-gray-900
+                           font-extrabold
+                           py-4
+                           rounded-xl">
+
+                    <i class="fas
+                          fa-circle-check
+                          mr-2">
+                    </i>
+
+                    XÁC NHẬN ĐẶT MÓN
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ========================================================= -->
+    <!-- CART OVERLAY -->
+    <!-- ========================================================= -->
+
+    <div id="cartOverlay"
+         onclick="closeCart()"
+         class="fixed
+                inset-0
+                bg-black/60
+                hidden
+                z-40">
+    </div>
+
+
+
+    <!-- ========================================================= -->
+    <!-- CART DRAWER -->
+    <!-- ========================================================= -->
+
+    <aside id="cartDrawer"
+           class="cart-drawer
+                  fixed
+                  top-0
+                  right-0
+                  h-full
+                  w-full
+                  sm:w-[430px]
+                  bg-white
+                  z-50
+                  shadow-2xl
+                  translate-x-full
+                  flex
+                  flex-col">
+
+
+        <!-- HEADER -->
+
+        <div class="bg-[#201408]
+                    text-white
+                    px-6
+                    py-5
+                    flex
+                    items-center
+                    justify-between">
+
+
+            <div>
+
+                <h2 class="text-2xl
+                           font-extrabold">
+
+                    Giỏ Món
+
+                </h2>
+
+
+                <p class="text-yellow-300
+                          text-sm">
+
+                    Luxury Hotel Restaurant
+
+                </p>
+
+            </div>
+
+
+            <button type="button"
+                    onclick="closeCart()"
+                    class="w-10
+                           h-10
+                           rounded-full
+                           bg-white/10
+                           hover:bg-white/20">
+
+                <i class="fas fa-times"></i>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ITEMS -->
+
+        <div id="cartItems"
+             class="flex-1
+                    overflow-y-auto
+                    p-5">
+
+        </div>
+
+
+
+        <!-- FOOTER -->
+
+        <div class="border-t
+                    p-5
+                    bg-[#fffdf8]">
+
+
+            <div class="flex
+                        items-center
+                        justify-between
+                        mb-5">
+
+
+                <span class="text-gray-500
+                             font-semibold">
+
+                    Tổng cộng
+
+                </span>
+
+
+                <span id="cartTotal"
+                      class="text-2xl
+                             font-extrabold
+                             text-yellow-700">
+
+                    0đ
+
+                </span>
+
+            </div>
+
+
+            <button type="button"
+                    onclick="continueOrder()"
+                    class="w-full
+                           bg-yellow-500
+                           hover:bg-yellow-600
+                           text-gray-900
+                           font-extrabold
+                           py-4
+                           rounded-xl
+                           transition">
+
+                <i class="fas
+                          fa-receipt
+                          mr-2">
+                </i>
+
+                TIẾP TỤC ĐẶT MÓN
+
+            </button>
+
+
+            <button type="button"
+                    onclick="clearCart()"
+                    class="w-full
+                           mt-3
+                           border
+                           border-gray-300
+                           hover:bg-gray-100
+                           text-gray-600
+                           font-semibold
+                           py-3
+                           rounded-xl">
+
+                Xóa toàn bộ giỏ
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+
+    <script>
+
+        let activeCategory =
+            'all';
+
+
+        let restaurantCart =
+            [];
+
+
+        // =======================================================
+        // CHUẨN HÓA CHỮ TÌM KIẾM
+        // =======================================================
+
+        function normalizeText(value) {
+
+            return (value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(
+                    /[\u0300-\u036f]/g,
+                    ''
+                )
+                .replace(
+                    /đ/g,
+                    'd'
+                );
+
+        }
+
+
+
+        // =======================================================
+        // CATEGORY
+        // =======================================================
+
+        function selectCategory(button) {
+
+            document
+                .querySelectorAll(
+                    '.category-button'
+                )
+                .forEach(
+                    function (item) {
+
+                        item.classList.remove(
+                            'active'
+                        );
+
+                    }
+                );
+
+
+            button.classList.add(
+                'active'
+            );
+
+
+            activeCategory =
+                button.dataset.category;
+
+
+            applyFoodFilter();
+
+        }
+
+
+
+        // =======================================================
+        // SEARCH + FILTER
+        // =======================================================
+
+        function applyFoodFilter() {
+
+            const keyword =
+                normalizeText(
+                    document.getElementById(
+                        'foodSearch'
+                    ).value
+                );
+
+
+            let visibleCount =
+                0;
+
+
+            document
+                .querySelectorAll(
+                    '[data-food-card]'
+                )
+                .forEach(
+                    function (card) {
+
+                        const category =
+                            card.dataset.category;
+
+
+                        const search =
+                            normalizeText(
+                                card.dataset.search
+                            );
+
+
+                        const categoryMatch =
+                            activeCategory ===
+                            'all'
+                            ||
+                            category ===
+                            activeCategory;
+
+
+                        const searchMatch =
+                            !keyword
+                            ||
+                            search.includes(
+                                keyword
+                            );
+
+
+                        const visible =
+                            categoryMatch
+                            &&
+                            searchMatch;
+
+
+                        card.classList.toggle(
+                            'hidden',
+                            !visible
+                        );
+
+
+                        if (visible) {
+
+                            visibleCount++;
+
+                        }
+
+                    }
+                );
+
+
+            document.getElementById(
+                'foodResultCount'
+            ).innerText =
+                visibleCount +
+                ' món';
+
+
+            document.getElementById(
+                'foodEmpty'
+            ).classList.toggle(
+                'hidden',
+                visibleCount !== 0
+            );
+
+        }
+
+
+
+        // =======================================================
+        // FORMAT TIỀN
+        // =======================================================
+
+        function formatMoney(value) {
+
+            return Number(
+                value || 0
+            )
+                .toLocaleString(
+                    'vi-VN'
+                )
+                + 'đ';
+
+        }
+
+
+
+        // =======================================================
+        // LOAD CART
+        // =======================================================
+
+        function loadRestaurantCart() {
+
+            try {
+
+                const saved =
+                    sessionStorage.getItem(
+                        'restaurantCart'
+                    );
+
+
+                if (saved) {
+
+                    restaurantCart =
+                        JSON.parse(
+                            saved
+                        );
+
+                }
+
+            }
+            catch {
+
+                restaurantCart =
+                    [];
+
+            }
+
+
+            renderCart();
+
+        }
+
+
+
+        // =======================================================
+        // SAVE CART
+        // =======================================================
+
+        function saveRestaurantCart() {
+
+            sessionStorage.setItem(
+                'restaurantCart',
+                JSON.stringify(
+                    restaurantCart
+                )
+            );
+
+        }
+
+
+
+        // =======================================================
+        // ADD FOOD
+        // =======================================================
+
+        function addFoodFromButton(
+            button
+        ) {
+
+            const id =
+                parseInt(
+                    button.dataset.id
+                );
+
+
+            const name =
+                button.dataset.name;
+
+
+            const price =
+                Number(
+                    button.dataset.price
+                );
+
+
+            const unit =
+                button.dataset.unit
+                || 'phần';
+
+
+            const existing =
+                restaurantCart.find(
+                    function (item) {
+
+                        return item.id === id;
+
+                    }
+                );
+
+
+            if (existing) {
+
+                existing.quantity++;
+
+            }
+            else {
+
+                restaurantCart.push(
+                    {
+                        id:
+                            id,
+
+                        name:
+                            name,
+
+                        price:
+                            price,
+
+                        unit:
+                            unit,
+
+                        quantity:
+                            1
+                    }
+                );
+
+            }
+
+
+            saveRestaurantCart();
+
+            renderCart();
+
+
+            const originalText =
+                button.innerHTML;
+
+
+            button.innerHTML =
+                '<i class="fas fa-check mr-1"></i> Đã thêm';
+
+
+            setTimeout(
+                function () {
+
+                    button.innerHTML =
+                        originalText;
+
+                },
+                800
+            );
+
+        }
+
+
+
+        // =======================================================
+        // TĂNG/GIẢM
+        // =======================================================
+
+        function changeCartQuantity(
+            id,
+            amount
+        ) {
+
+            const item =
+                restaurantCart.find(
+                    function (food) {
+
+                        return food.id === id;
+
+                    }
+                );
+
+
+            if (!item) {
+
+                return;
+
+            }
+
+
+            item.quantity +=
+                amount;
+
+
+            if (
+                item.quantity <= 0
+            ) {
+
+                restaurantCart =
+                    restaurantCart.filter(
+                        function (food) {
+
+                            return food.id !== id;
+
+                        }
+                    );
+
+            }
+
+
+            saveRestaurantCart();
+
+            renderCart();
+
+        }
+
+
+
+        // =======================================================
+        // XÓA 1 MÓN
+        // =======================================================
+
+        function removeCartItem(
+            id
+        ) {
+
+            restaurantCart =
+                restaurantCart.filter(
+                    function (food) {
+
+                        return food.id !== id;
+
+                    }
+                );
+
+
+            saveRestaurantCart();
+
+            renderCart();
+
+        }
+
+
+
+        // =======================================================
+        // XÓA TOÀN BỘ
+        // =======================================================
+
+        function clearCart() {
+
+            if (
+                restaurantCart.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !confirm(
+                    'Bạn có chắc muốn xóa toàn bộ giỏ món?'
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            restaurantCart =
+                [];
+
+
+            saveRestaurantCart();
+
+            renderCart();
+
+        }
+
+
+
+        // =======================================================
+        // ESCAPE HTML
+        // =======================================================
+
+        function escapeHtml(
+            value
+        ) {
+
+            const div =
+                document.createElement(
+                    'div'
+                );
+
+
+            div.textContent =
+                value || '';
+
+
+            return div.innerHTML;
+
+        }
+
+
+
+        // =======================================================
+        // RENDER CART
+        // =======================================================
+
+        function renderCart() {
+
+            const container =
+                document.getElementById(
+                    'cartItems'
+                );
+
+
+            let total =
+                0;
+
+
+            let count =
+                0;
+
+
+            if (
+                restaurantCart.length === 0
+            ) {
+
+                container.innerHTML =
+                    '<div class="' +
+                    'text-center py-16 text-gray-400">' +
+
+                    '<i class="' +
+                    'fas fa-cart-shopping ' +
+                    'text-5xl mb-4">' +
+                    '</i>' +
+
+                    '<p class="' +
+                    'font-bold text-lg">' +
+                    'Giỏ món đang trống' +
+                    '</p>' +
+
+                    '<p class="text-sm mt-1">' +
+                    'Hãy thêm món bạn yêu thích.' +
+                    '</p>' +
+
+                    '</div>';
+
+            }
+            else {
+
+                container.innerHTML =
+                    '';
+
+
+                restaurantCart.forEach(
+                    function (item) {
+
+                        total +=
+                            item.price
+                            *
+                            item.quantity;
+
+
+                        count +=
+                            item.quantity;
+
+
+                        const row =
+                            document.createElement(
+                                'div'
+                            );
+
+
+                        row.className =
+                            'border-b ' +
+                            'border-gray-100 ' +
+                            'py-5';
+
+
+                        row.innerHTML =
+                            '<div class="' +
+                            'flex justify-between gap-3">' +
+
+                            '<div class="flex-1">' +
+
+                            '<h3 class="' +
+                            'font-bold text-gray-900">' +
+
+                            escapeHtml(
+                                item.name
+                            ) +
+
+                            '</h3>' +
+
+                            '<p class="' +
+                            'text-sm text-yellow-700 ' +
+                            'font-bold mt-1">' +
+
+                            formatMoney(
+                                item.price
+                            ) +
+
+                            ' / ' +
+
+                            escapeHtml(
+                                item.unit
+                            ) +
+
+                            '</p>' +
+
+                            '</div>' +
+
+                            '<button type="button" ' +
+                            'onclick="removeCartItem(' +
+                            item.id +
+                            ')" ' +
+
+                            'class="' +
+                            'text-red-500 ' +
+                            'hover:text-red-700">' +
+
+                            '<i class="' +
+                            'fas fa-trash">' +
+                            '</i>' +
+
+                            '</button>' +
+
+                            '</div>' +
+
+
+                            '<div class="' +
+                            'flex items-center ' +
+                            'justify-between mt-4">' +
+
+                            '<div class="' +
+                            'flex items-center gap-2">' +
+
+                            '<button type="button" ' +
+                            'onclick="changeCartQuantity(' +
+                            item.id +
+                            ', -1)" ' +
+
+                            'class="' +
+                            'w-9 h-9 rounded-full ' +
+                            'border border-gray-300 ' +
+                            'hover:bg-gray-100">' +
+
+                            '<i class="fas fa-minus"></i>' +
+
+                            '</button>' +
+
+                            '<span class="' +
+                            'w-8 text-center font-bold">' +
+
+                            item.quantity +
+
+                            '</span>' +
+
+                            '<button type="button" ' +
+                            'onclick="changeCartQuantity(' +
+                            item.id +
+                            ', 1)" ' +
+
+                            'class="' +
+                            'w-9 h-9 rounded-full ' +
+                            'bg-yellow-500 ' +
+                            'hover:bg-yellow-600">' +
+
+                            '<i class="fas fa-plus"></i>' +
+
+                            '</button>' +
+
+                            '</div>' +
+
+                            '<span class="' +
+                            'font-extrabold text-gray-900">' +
+
+                            formatMoney(
+                                item.price
+                                *
+                                item.quantity
+                            ) +
+
+                            '</span>' +
+
+                            '</div>';
+
+
+                        container.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+            }
+
+
+            document.getElementById(
+                'cartTotal'
+            ).innerText =
+                formatMoney(
+                    total
+                );
+
+
+            document.getElementById(
+                'cartCount'
+            ).innerText =
+                count;
+
+        }
+
+
+
+        // =======================================================
+        // OPEN CART
+        // =======================================================
+
+        function openCart() {
+
+            document.getElementById(
+                'cartOverlay'
+            ).classList.remove(
+                'hidden'
+            );
+
+
+            document.getElementById(
+                'cartDrawer'
+            ).classList.remove(
+                'translate-x-full'
+            );
+
+        }
+
+
+
+        // =======================================================
+        // CLOSE CART
+        // =======================================================
+
+        function closeCart() {
+
+            document.getElementById(
+                'cartOverlay'
+            ).classList.add(
+                'hidden'
+            );
+
+
+            document.getElementById(
+                'cartDrawer'
+            ).classList.add(
+                'translate-x-full'
+            );
+
+        }
+
+
+
+        // =======================================================
+        // TIẾP TỤC ĐẶT MÓN
+        // =======================================================
+
+        function continueOrder() {
+
+            if (
+                restaurantCart.length === 0
+            ) {
+
+                alert(
+                    'Vui lòng chọn ít nhất một món.'
+                );
+
+                return;
+
+            }
+
+
+            closeCart();
+
+
+            document.getElementById(
+                'orderModalTotal'
+            ).innerText =
+                formatMoney(
+                    calculateRestaurantCartTotal()
+                );
+
+
+            document.getElementById(
+                'orderError'
+            ).classList.add(
+                'hidden'
+            );
+
+
+            updateOrderTypeFields();
+
+
+            const modal =
+                document.getElementById(
+                    'orderModal'
+                );
+
+
+            modal.classList.remove(
+                'hidden'
+            );
+
+
+            modal.classList.add(
+                'flex'
+            );
+
+        }
+        // =======================================================
+// TÍNH TỔNG GIỎ
+// =======================================================
+
+function calculateRestaurantCartTotal() {
+
+    let total =
+        0;
+
+
+    restaurantCart.forEach(
+        function (item) {
+
+            total +=
+                Number(item.price)
+                *
+                Number(item.quantity);
+
+        }
+    );
+
+
+    return total;
+
+}
+
+
+// =======================================================
+// ĐÓNG MODAL ORDER
+// =======================================================
+
+function closeOrderModal() {
+
+    const modal =
+        document.getElementById(
+            'orderModal'
+        );
+
+
+    modal.classList.add(
+        'hidden'
+    );
+
+
+    modal.classList.remove(
+        'flex'
+    );
+
+}
+
+
+// =======================================================
+// HIỆN SỐ BÀN / SỐ PHÒNG
+// =======================================================
+
+function updateOrderTypeFields() {
+
+    const selected =
+        document.querySelector(
+            'input[name="orderType"]:checked'
+        );
+
+
+    const type =
+        selected
+        ? selected.value
+        : 'Ăn tại nhà hàng';
+
+
+    const tableBox =
+        document.getElementById(
+            'tableNumberBox'
+        );
+
+
+    const roomBox =
+        document.getElementById(
+            'roomNumberBox'
+        );
+
+
+    if (
+        type ===
+        'Giao lên phòng'
+    ) {
+
+        tableBox.classList.add(
+            'hidden'
+        );
+
+
+        roomBox.classList.remove(
+            'hidden'
+        );
+
+    }
+    else {
+
+        roomBox.classList.add(
+            'hidden'
+        );
+
+
+        tableBox.classList.remove(
+            'hidden'
+        );
+
+    }
+
+}
+
+
+// =======================================================
+// HIỆN LỖI
+// =======================================================
+
+function showOrderError(
+    message
+) {
+
+    const error =
+        document.getElementById(
+            'orderError'
+        );
+
+
+    error.innerText =
+        message;
+
+
+    error.classList.remove(
+        'hidden'
+    );
+
+}
+
+
+// =======================================================
+// GỬI ĐƠN ĐẶT MÓN
+// =======================================================
+
+async function submitRestaurantOrder() {
+
+    const name =
+        document
+            .getElementById(
+                'orderCustomerName'
+            )
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById(
+                'orderPhone'
+            )
+            .value
+            .trim();
+
+
+    const selectedType =
+        document.querySelector(
+            'input[name="orderType"]:checked'
+        );
+
+
+    const type =
+        selectedType
+        ? selectedType.value
+        : '';
+
+
+    const tableNumber =
+        document
+            .getElementById(
+                'orderTableNumber'
+            )
+            .value
+            .trim();
+
+
+    const roomNumber =
+        document
+            .getElementById(
+                'orderRoomNumber'
+            )
+            .value
+            .trim();
+
+
+    const note =
+        document
+            .getElementById(
+                'orderNote'
+            )
+            .value
+            .trim();
+
+
+    const paymentMethod =
+        document
+            .getElementById(
+                'orderPaymentMethod'
+            )
+            .value;
+
+
+    // ===================================================
+    // VALIDATE CLIENT
+    // ===================================================
+
+    if (!name) {
+
+        showOrderError(
+            'Vui lòng nhập họ tên.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !/^[0-9]{10,11}$/
+            .test(phone)
+    ) {
+
+        showOrderError(
+            'Số điện thoại phải gồm 10 đến 11 chữ số.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        type ===
+        'Ăn tại nhà hàng'
+        &&
+        !tableNumber
+    ) {
+
+        showOrderError(
+            'Vui lòng nhập số bàn.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        type ===
+        'Giao lên phòng'
+        &&
+        !roomNumber
+    ) {
+
+        showOrderError(
+            'Vui lòng nhập số phòng.'
+        );
+
+        return;
+
+    }
+
+
+    if (
+        restaurantCart.length === 0
+    ) {
+
+        showOrderError(
+            'Giỏ món đang trống.'
+        );
+
+        return;
+
+    }
+
+
+    // ===================================================
+    // DATA
+    // ===================================================
+
+    const data =
+        {
+
+            HoTen:
+                name,
+
+            SoDienThoai:
+                phone,
+
+            HinhThuc:
+                type,
+
+            SoBan:
+                type ===
+                'Ăn tại nhà hàng'
+                ? tableNumber
+                : null,
+
+            SoPhong:
+                type ===
+                'Giao lên phòng'
+                ? roomNumber
+                : null,
+
+            GhiChu:
+                note,
+
+            PhuongThucThanhToan:
+                paymentMethod,
+
+            Items:
+                restaurantCart.map(
+                    function (item) {
+
+                        return {
+
+                            MaMonAn:
+                                item.id,
+
+                            SoLuong:
+                                item.quantity
+
+                        };
+
+                    }
+                )
+
+        };
+
+
+    // ===================================================
+    // LOCK BUTTON
+    // ===================================================
+
+    const button =
+        document.getElementById(
+            'placeOrderButton'
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.innerHTML =
+        '<i class="fas fa-spinner fa-spin mr-2"></i>' +
+        'ĐANG XỬ LÝ...';
+
+
+    document.getElementById(
+        'orderError'
+    ).classList.add(
+        'hidden'
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                '@Url.Action(
+                    "PlaceOrder",
+                    "Restaurant"
+                )',
+                {
+                    method:
+                        'POST',
+
+                    headers:
+                        {
+                            'Content-Type':
+                                'application/json'
+                        },
+
+                    body:
+                        JSON.stringify(
+                            data
+                        )
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            showOrderError(
+                result.message ||
+                'Không thể đặt món.'
+            );
+
+
+            return;
+
+        }
+
+
+        // ===============================================
+        // THÀNH CÔNG
+        // ===============================================
+
+        restaurantCart =
+            [];
+
+
+        saveRestaurantCart();
+
+        renderCart();
+
+
+        closeOrderModal();
+
+
+        const orderId =
+            result.orderId
+            ||
+            result.maDon
+            ||
+            result.MaDon
+            ||
+            '---';
+
+
+        alert(
+            'ĐẶT MÓN THÀNH CÔNG!\n\n'
+            +
+            'Mã đơn: #'
+            +
+            orderId
+            +
+            '\n'
+            +
+            'Tổng tiền: '
+            +
+            formatMoney(
+                result.totalAmount
+            )
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showOrderError(
+            'Không thể kết nối tới hệ thống đặt món.'
+        );
+
+    }
+    finally {
+
+        button.disabled =
+            false;
+
+
+        button.innerHTML =
+            '<i class="fas fa-circle-check mr-2"></i>' +
+            'XÁC NHẬN ĐẶT MÓN';
+
+    }
+
+}
+
+
+            
+
+
+        // =======================================================
+        // ESC ĐÓNG CART
+        // =======================================================
+
+        document.addEventListener(
+            'keydown',
+            function (event) {
+
+                if (
+                    event.key ===
+                    'Escape'
+                ) {
+
+                    closeCart();
+
+                }
+
+            }
+        );
+
+
+
+        // =======================================================
+        // LOAD
+        // =======================================================
+
+        window.addEventListener(
+            'load',
+            function () {
+
+                loadRestaurantCart();
+
+                applyFoodFilter();
+
+            }
+        );
+
+    </script>
+
+    <script>
+
+        // =========================================================
+        // FIX CHỨC NĂNG NHÀ HÀNG
+        // =========================================================
+
+        let restaurantCartFix = [];
+
+        let restaurantCategoryFix = 'all';
+
+
+        // =========================================================
+        // CHUẨN HÓA CHỮ
+        // =========================================================
+
+        function normalizeRestaurantText(value) {
+
+            return (value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(
+                    /[\u0300-\u036f]/g,
+                    ''
+                )
+                .replace(
+                    /đ/g,
+                    'd'
+                );
+
+        }
+
+
+        // =========================================================
+        // CHỌN DANH MỤC
+        // =========================================================
+
+        window.selectCategory = function (button) {
+
+            document
+                .querySelectorAll(
+                    '.category-button'
+                )
+                .forEach(function (item) {
+
+                    item.classList.remove(
+                        'active'
+                    );
+
+                });
+
+
+            button.classList.add(
+                'active'
+            );
+
+
+            restaurantCategoryFix =
+                button.getAttribute(
+                    'data-category'
+                )
+                || 'all';
+
+
+            applyRestaurantFoodFilter();
+
+        };
+
+
+        // =========================================================
+        // LỌC + TÌM MÓN
+        // =========================================================
+
+        window.applyFoodFilter =
+            function () {
+
+                applyRestaurantFoodFilter();
+
+            };
+
+
+        function applyRestaurantFoodFilter() {
+
+            const searchInput =
+                document.getElementById(
+                    'foodSearch'
+                );
+
+
+            const keyword =
+                normalizeRestaurantText(
+                    searchInput
+                        ? searchInput.value
+                        : ''
+                );
+
+
+            const cards =
+                document.querySelectorAll(
+                    '[data-food-card]'
+                );
+
+
+            let visibleCount =
+                0;
+
+
+            cards.forEach(
+                function (card) {
+
+                    const category =
+                        card.getAttribute(
+                            'data-category'
+                        );
+
+
+                    const searchText =
+                        normalizeRestaurantText(
+                            card.getAttribute(
+                                'data-search'
+                            )
+                        );
+
+
+                    const categoryMatch =
+                        restaurantCategoryFix ===
+                        'all'
+                        ||
+                        restaurantCategoryFix ===
+                        category;
+
+
+                    const searchMatch =
+                        keyword === ''
+                        ||
+                        searchText.includes(
+                            keyword
+                        );
+
+
+                    const visible =
+                        categoryMatch
+                        &&
+                        searchMatch;
+
+
+                    if (visible) {
+
+                        card.classList.remove(
+                            'hidden'
+                        );
+
+                        visibleCount++;
+
+                    }
+                    else {
+
+                        card.classList.add(
+                            'hidden'
+                        );
+
+                    }
+
+                }
+            );
+
+
+            const countLabel =
+                document.getElementById(
+                    'foodResultCount'
+                );
+
+
+            if (countLabel) {
+
+                countLabel.innerText =
+                    visibleCount +
+                    ' món';
+
+            }
+
+
+            const empty =
+                document.getElementById(
+                    'foodEmpty'
+                );
+
+
+            if (empty) {
+
+                if (visibleCount === 0) {
+
+                    empty.classList.remove(
+                        'hidden'
+                    );
+
+                }
+                else {
+
+                    empty.classList.add(
+                        'hidden'
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        // =========================================================
+        // FORMAT TIỀN
+        // =========================================================
+
+        function restaurantFormatMoney(value) {
+
+            return Number(
+                value || 0
+            )
+                .toLocaleString(
+                    'vi-VN'
+                )
+                + 'đ';
+
+        }
+
+
+        // =========================================================
+        // ESCAPE HTML
+        // =========================================================
+
+        function restaurantEscapeHtml(value) {
+
+            const div =
+                document.createElement(
+                    'div'
+                );
+
+
+            div.textContent =
+                value || '';
+
+
+            return div.innerHTML;
+
+        }
+
+
+        // =========================================================
+        // ĐỌC GIỎ TỪ SESSION STORAGE
+        // =========================================================
+
+        function loadRestaurantCartFix() {
+
+            try {
+
+                const saved =
+                    sessionStorage.getItem(
+                        'restaurantCart'
+                    );
+
+
+                if (saved) {
+
+                    const parsed =
+                        JSON.parse(
+                            saved
+                        );
+
+
+                    if (
+                        Array.isArray(
+                            parsed
+                        )
+                    ) {
+
+                        restaurantCartFix =
+                            parsed;
+
+                    }
+
+                }
+
+            }
+            catch (error) {
+
+                restaurantCartFix =
+                    [];
+
+            }
+
+
+            renderRestaurantCartFix();
+
+        }
+
+
+        // =========================================================
+        // LƯU GIỎ
+        // =========================================================
+
+        function saveRestaurantCartFix() {
+
+            sessionStorage.setItem(
+                'restaurantCart',
+                JSON.stringify(
+                    restaurantCartFix
+                )
+            );
+
+        }
+
+
+        // =========================================================
+        // NÚT + THÊM
+        // =========================================================
+
+        window.addFoodFromButton =
+            function (button) {
+
+                const id =
+                    parseInt(
+                        button.getAttribute(
+                            'data-id'
+                        )
+                    );
+
+
+                const name =
+                    button.getAttribute(
+                        'data-name'
+                    )
+                    || 'Món ăn';
+
+
+                const price =
+                    Number(
+                        button.getAttribute(
+                            'data-price'
+                        )
+                    )
+                    || 0;
+
+
+                const unit =
+                    button.getAttribute(
+                        'data-unit'
+                    )
+                    || 'phần';
+
+
+                if (
+                    !id ||
+                    price < 0
+                ) {
+
+                    alert(
+                        'Thông tin món ăn không hợp lệ.'
+                    );
+
+                    return;
+
+                }
+
+
+                const existing =
+                    restaurantCartFix
+                        .find(
+                            function (item) {
+
+                                return (
+                                    Number(item.id) ===
+                                    id
+                                );
+
+                            }
+                        );
+
+
+                if (existing) {
+
+                    existing.quantity =
+                        Number(
+                            existing.quantity
+                        )
+                        + 1;
+
+                }
+                else {
+
+                    restaurantCartFix.push(
+                        {
+                            id:
+                                id,
+
+                            name:
+                                name,
+
+                            price:
+                                price,
+
+                            unit:
+                                unit,
+
+                            quantity:
+                                1
+                        }
+                    );
+
+                }
+
+
+                saveRestaurantCartFix();
+
+                renderRestaurantCartFix();
+
+
+                // Hiệu ứng nút
+                const oldHtml =
+                    button.innerHTML;
+
+
+                button.innerHTML =
+                    '<i class="fas fa-check mr-1"></i>' +
+                    ' Đã thêm';
+
+
+                button.disabled =
+                    true;
+
+
+                setTimeout(
+                    function () {
+
+                        button.innerHTML =
+                            oldHtml;
+
+                        button.disabled =
+                            false;
+
+                    },
+                    600
+                );
+
+            };
+
+
+        // =========================================================
+        // VẼ GIỎ MÓN
+        // =========================================================
+
+        function renderRestaurantCartFix() {
+
+            const container =
+                document.getElementById(
+                    'cartItems'
+                );
+
+
+            const countElement =
+                document.getElementById(
+                    'cartCount'
+                );
+
+
+            const totalElement =
+                document.getElementById(
+                    'cartTotal'
+                );
+
+
+            let count =
+                0;
+
+
+            let total =
+                0;
+
+
+            restaurantCartFix
+                .forEach(
+                    function (item) {
+
+                        const quantity =
+                            Number(
+                                item.quantity
+                            )
+                            || 0;
+
+
+                        count +=
+                            quantity;
+
+
+                        total +=
+                            Number(
+                                item.price
+                            )
+                            *
+                            quantity;
+
+                    }
+                );
+
+
+            if (countElement) {
+
+                countElement.innerText =
+                    count;
+
+            }
+
+
+            if (totalElement) {
+
+                totalElement.innerText =
+                    restaurantFormatMoney(
+                        total
+                    );
+
+            }
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            if (
+                restaurantCartFix.length ===
+                0
+            ) {
+
+                container.innerHTML =
+                    '<div class="' +
+                    'text-center py-16 text-gray-400">' +
+
+                    '<i class="' +
+                    'fas fa-cart-shopping ' +
+                    'text-5xl mb-4">' +
+                    '</i>' +
+
+                    '<p class="' +
+                    'font-bold text-lg">' +
+                    'Giỏ món đang trống' +
+                    '</p>' +
+
+                    '<p class="' +
+                    'text-sm mt-2">' +
+                    'Hãy chọn món bạn yêu thích.' +
+                    '</p>' +
+
+                    '</div>';
+
+
+                return;
+
+            }
+
+
+            container.innerHTML =
+                '';
+
+
+            restaurantCartFix
+                .forEach(
+                    function (item) {
+
+                        const row =
+                            document.createElement(
+                                'div'
+                            );
+
+
+                        row.className =
+                            'border-b ' +
+                            'border-gray-100 ' +
+                            'py-5';
+
+
+                        row.innerHTML =
+
+                            '<div class="' +
+                            'flex justify-between gap-3">' +
+
+                            '<div class="flex-1">' +
+
+                            '<p class="' +
+                            'font-bold text-gray-900">' +
+
+                            restaurantEscapeHtml(
+                                item.name
+                            ) +
+
+                            '</p>' +
+
+                            '<p class="' +
+                            'text-yellow-700 ' +
+                            'font-bold text-sm mt-1">' +
+
+                            restaurantFormatMoney(
+                                item.price
+                            ) +
+
+                            ' / ' +
+
+                            restaurantEscapeHtml(
+                                item.unit
+                            ) +
+
+                            '</p>' +
+
+                            '</div>' +
+
+
+                            '<button type="button" ' +
+                            'onclick="removeRestaurantFoodFix(' +
+                            Number(item.id) +
+                            ')" ' +
+
+                            'class="' +
+                            'text-red-500 ' +
+                            'hover:text-red-700">' +
+
+                            '<i class="' +
+                            'fas fa-trash">' +
+                            '</i>' +
+
+                            '</button>' +
+
+                            '</div>' +
+
+
+                            '<div class="' +
+                            'flex items-center ' +
+                            'justify-between mt-4">' +
+
+
+                            '<div class="' +
+                            'flex items-center gap-2">' +
+
+
+                            '<button type="button" ' +
+                            'onclick="' +
+                            'changeRestaurantFoodQuantityFix(' +
+                            Number(item.id) +
+                            ', -1)" ' +
+
+                            'class="' +
+                            'w-9 h-9 ' +
+                            'border rounded-full">' +
+
+                            '<i class="' +
+                            'fas fa-minus">' +
+                            '</i>' +
+
+                            '</button>' +
+
+
+                            '<span class="' +
+                            'w-8 text-center ' +
+                            'font-bold">' +
+
+                            Number(
+                                item.quantity
+                            ) +
+
+                            '</span>' +
+
+
+                            '<button type="button" ' +
+                            'onclick="' +
+                            'changeRestaurantFoodQuantityFix(' +
+                            Number(item.id) +
+                            ', 1)" ' +
+
+                            'class="' +
+                            'w-9 h-9 ' +
+                            'bg-yellow-500 ' +
+                            'rounded-full">' +
+
+                            '<i class="' +
+                            'fas fa-plus">' +
+                            '</i>' +
+
+                            '</button>' +
+
+                            '</div>' +
+
+
+                            '<strong>' +
+
+                            restaurantFormatMoney(
+                                Number(
+                                    item.price
+                                )
+                                *
+                                Number(
+                                    item.quantity
+                                )
+                            ) +
+
+                            '</strong>' +
+
+                            '</div>';
+
+
+                        container.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // =========================================================
+        // TĂNG GIẢM
+        // =========================================================
+
+        window.changeRestaurantFoodQuantityFix =
+            function (
+                id,
+                amount
+            ) {
+
+                const item =
+                    restaurantCartFix
+                        .find(
+                            function (food) {
+
+                                return (
+                                    Number(food.id) ===
+                                    Number(id)
+                                );
+
+                            }
+                        );
+
+
+                if (!item) {
+
+                    return;
+
+                }
+
+
+                item.quantity =
+                    Number(
+                        item.quantity
+                    )
+                    +
+                    Number(
+                        amount
+                    );
+
+
+                if (
+                    item.quantity <= 0
+                ) {
+
+                    restaurantCartFix =
+                        restaurantCartFix
+                            .filter(
+                                function (food) {
+
+                                    return (
+                                        Number(food.id)
+                                        !==
+                                        Number(id)
+                                    );
+
+                                }
+                            );
+
+                }
+
+
+                saveRestaurantCartFix();
+
+                renderRestaurantCartFix();
+
+            };
+
+
+        // =========================================================
+        // XÓA MÓN
+        // =========================================================
+
+        window.removeRestaurantFoodFix =
+            function (id) {
+
+                restaurantCartFix =
+                    restaurantCartFix
+                        .filter(
+                            function (food) {
+
+                                return (
+                                    Number(food.id)
+                                    !==
+                                    Number(id)
+                                );
+
+                            }
+                        );
+
+
+                saveRestaurantCartFix();
+
+                renderRestaurantCartFix();
+
+            };
+
+
+        // =========================================================
+        // MỞ GIỎ
+        // =========================================================
+
+        window.openCart =
+            function () {
+
+                const overlay =
+                    document.getElementById(
+                        'cartOverlay'
+                    );
+
+
+                const drawer =
+                    document.getElementById(
+                        'cartDrawer'
+                    );
+
+
+                if (overlay) {
+
+                    overlay.classList.remove(
+                        'hidden'
+                    );
+
+                }
+
+
+                if (drawer) {
+
+                    drawer.classList.remove(
+                        'translate-x-full'
+                    );
+
+                }
+
+
+                renderRestaurantCartFix();
+
+            };
+
+
+        // =========================================================
+        // ĐÓNG GIỎ
+        // =========================================================
+
+        window.closeCart =
+            function () {
+
+                const overlay =
+                    document.getElementById(
+                        'cartOverlay'
+                    );
+
+
+                const drawer =
+                    document.getElementById(
+                        'cartDrawer'
+                    );
+
+
+                if (overlay) {
+
+                    overlay.classList.add(
+                        'hidden'
+                    );
+
+                }
+
+
+                if (drawer) {
+
+                    drawer.classList.add(
+                        'translate-x-full'
+                    );
+
+                }
+
+            };
+
+
+        // =========================================================
+        // XÓA TOÀN GIỎ
+        // =========================================================
+
+        window.clearCart =
+            function () {
+
+                if (
+                    restaurantCartFix.length ===
+                    0
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    !confirm(
+                        'Bạn có chắc muốn xóa toàn bộ giỏ món?'
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                restaurantCartFix =
+                    [];
+
+
+                saveRestaurantCartFix();
+
+                renderRestaurantCartFix();
+
+            };
+
+        // =========================================================
+        // TIẾP TỤC ĐẶT MÓN
+        // =========================================================
+
+        window.continueOrder =
+            function () {
+
+                // =====================================================
+                // 1. KIỂM TRA GIỎ
+                // =====================================================
+
+                if (
+                    !restaurantCartFix ||
+                    restaurantCartFix.length === 0
+                ) {
+
+                    alert(
+                        'Vui lòng chọn ít nhất một món.'
+                    );
+
+                    return;
+
+                }
+
+
+                // =====================================================
+                // 2. ĐÓNG GIỎ MÓN
+                // =====================================================
+
+                closeCart();
+
+
+                // =====================================================
+                // 3. TÍNH TỔNG ĐƠN
+                // =====================================================
+
+                let total =
+                    0;
+
+
+                restaurantCartFix.forEach(
+                    function (item) {
+
+                        total +=
+                            Number(item.price)
+                            *
+                            Number(item.quantity);
+
+                    }
+                );
+
+
+                // =====================================================
+                // 4. TÌM MODAL XÁC NHẬN ĐẶT MÓN
+                // =====================================================
+
+                const modal =
+                    document.getElementById(
+                        'orderModal'
+                    );
+
+
+                if (!modal) {
+
+                    alert(
+                        'Chưa tìm thấy giao diện xác nhận đặt món.'
+                    );
+
+                    return;
+
+                }
+
+
+                // =====================================================
+                // 5. HIỆN TỔNG TIỀN
+                // =====================================================
+
+                const totalElement =
+                    document.getElementById(
+                        'orderModalTotal'
+                    );
+
+
+                if (totalElement) {
+
+                    totalElement.innerText =
+                        restaurantFormatMoney(
+                            total
+                        );
+
+                }
+
+
+                // =====================================================
+                // 6. ẨN LỖI CŨ
+                // =====================================================
+
+                const errorBox =
+                    document.getElementById(
+                        'orderError'
+                    );
+
+
+                if (errorBox) {
+
+                    errorBox.classList.add(
+                        'hidden'
+                    );
+
+                    errorBox.innerText =
+                        '';
+
+                }
+
+
+                // =====================================================
+                // 7. HIỆN SỐ BÀN / SỐ PHÒNG
+                // =====================================================
+
+                if (
+                    typeof updateOrderTypeFields
+                    ===
+                    'function'
+                ) {
+
+                    updateOrderTypeFields();
+
+                }
+
+
+                // =====================================================
+                // 8. MỞ MODAL
+                // =====================================================
+
+                modal.classList.remove(
+                    'hidden'
+                );
+
+
+                modal.classList.add(
+                    'flex'
+                );
+
+            };
+        // =========================================================
+        // ĐÓNG MODAL XÁC NHẬN ĐẶT MÓN
+        // =========================================================
+
+        window.closeOrderModal =
+            function () {
+
+                const modal =
+                    document.getElementById(
+                        'orderModal'
+                    );
+
+
+                if (!modal) {
+
+                    return;
+
+                }
+
+
+                modal.classList.add(
+                    'hidden'
+                );
+
+
+                modal.classList.remove(
+                    'flex'
+                );
+
+            };
+
+        // =========================================================
+        // ĐỔI SỐ BÀN / SỐ PHÒNG
+        // =========================================================
+
+        window.updateOrderTypeFields =
+            function () {
+
+                const selected =
+                    document.querySelector(
+                        'input[name="orderType"]:checked'
+                    );
+
+
+                const type =
+                    selected
+                        ? selected.value
+                        : 'Ăn tại nhà hàng';
+
+
+                const tableBox =
+                    document.getElementById(
+                        'tableNumberBox'
+                    );
+
+
+                const roomBox =
+                    document.getElementById(
+                        'roomNumberBox'
+                    );
+
+
+                if (
+                    !tableBox ||
+                    !roomBox
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    type ===
+                    'Giao lên phòng'
+                ) {
+
+                    tableBox.classList.add(
+                        'hidden'
+                    );
+
+
+                    roomBox.classList.remove(
+                        'hidden'
+                    );
+
+                }
+                else {
+
+                    roomBox.classList.add(
+                        'hidden'
+                    );
+
+
+                    tableBox.classList.remove(
+                        'hidden'
+                    );
+
+                }
+
+            };
+        // =========================================================
+        // HIỂN THỊ LỖI ĐẶT MÓN
+        // =========================================================
+
+        function showRestaurantOrderErrorFix(
+            message
+        ) {
+
+            const errorBox =
+                document.getElementById(
+                    'orderError'
+                );
+
+
+            if (!errorBox) {
+
+                return;
+
+            }
+
+
+            errorBox.innerText =
+                message;
+
+
+            errorBox.classList.remove(
+                'hidden'
+            );
+
+        }
+        // =========================================================
+// XÁC NHẬN ĐẶT MÓN
+// =========================================================
+
+window.submitRestaurantOrder =
+    async function () {
+
+        // =====================================================
+        // LẤY CÁC CONTROL
+        // =====================================================
+
+        const nameInput =
+            document.getElementById(
+                'orderCustomerName'
+            );
+
+
+        const phoneInput =
+            document.getElementById(
+                'orderPhone'
+            );
+
+
+        const tableInput =
+            document.getElementById(
+                'orderTableNumber'
+            );
+
+
+        const roomInput =
+            document.getElementById(
+                'orderRoomNumber'
+            );
+
+
+        const noteInput =
+            document.getElementById(
+                'orderNote'
+            );
+
+
+        const paymentInput =
+            document.getElementById(
+                'orderPaymentMethod'
+            );
+
+
+        // =====================================================
+        // LẤY GIÁ TRỊ
+        // =====================================================
+
+        const name =
+            nameInput
+            ? nameInput.value.trim()
+            : '';
+
+
+        const phone =
+            phoneInput
+            ? phoneInput.value.trim()
+            : '';
+
+
+        const tableNumber =
+            tableInput
+            ? tableInput.value.trim()
+            : '';
+
+
+        const roomNumber =
+            roomInput
+            ? roomInput.value.trim()
+            : '';
+
+
+        const note =
+            noteInput
+            ? noteInput.value.trim()
+            : '';
+
+
+        const paymentMethod =
+            paymentInput
+            ? paymentInput.value
+            : '';
+
+
+        const selectedType =
+            document.querySelector(
+                'input[name="orderType"]:checked'
+            );
+
+
+        const type =
+            selectedType
+            ? selectedType.value
+            : '';
+
+
+        // =====================================================
+        // XÓA LỖI CŨ
+        // =====================================================
+
+        const errorBox =
+            document.getElementById(
+                'orderError'
+            );
+
+
+        if (errorBox) {
+
+            errorBox.innerText =
+                '';
+
+
+            errorBox.classList.add(
+                'hidden'
+            );
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA HỌ TÊN
+        // =====================================================
+
+        if (!name) {
+
+            showRestaurantOrderErrorFix(
+                'Vui lòng nhập họ và tên.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA SĐT
+        // =====================================================
+
+        if (
+            !/^[0-9]{10,11}$/
+                .test(phone)
+        ) {
+
+            showRestaurantOrderErrorFix(
+                'Số điện thoại phải gồm 10 đến 11 chữ số.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA HÌNH THỨC
+        // =====================================================
+
+        if (
+            type !==
+            'Ăn tại nhà hàng'
+            &&
+            type !==
+            'Giao lên phòng'
+        ) {
+
+            showRestaurantOrderErrorFix(
+                'Vui lòng chọn hình thức nhận món.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA SỐ BÀN
+        // =====================================================
+
+        if (
+            type ===
+            'Ăn tại nhà hàng'
+            &&
+            !tableNumber
+        ) {
+
+            showRestaurantOrderErrorFix(
+                'Vui lòng nhập số bàn.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA SỐ PHÒNG
+        // =====================================================
+
+        if (
+            type ===
+            'Giao lên phòng'
+            &&
+            !roomNumber
+        ) {
+
+            showRestaurantOrderErrorFix(
+                'Vui lòng nhập số phòng.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // KIỂM TRA GIỎ
+        // =====================================================
+
+        if (
+            !restaurantCartFix ||
+            restaurantCartFix.length === 0
+        ) {
+
+            showRestaurantOrderErrorFix(
+                'Giỏ món đang trống.'
+            );
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // TẠO DỮ LIỆU GỬI SERVER
+        // =====================================================
+
+        const data =
+            {
+
+                HoTen:
+                    name,
+
+                SoDienThoai:
+                    phone,
+
+                HinhThuc:
+                    type,
+
+                SoBan:
+                    type ===
+                    'Ăn tại nhà hàng'
+                    ? tableNumber
+                    : null,
+
+                SoPhong:
+                    type ===
+                    'Giao lên phòng'
+                    ? roomNumber
+                    : null,
+
+                GhiChu:
+                    note,
+
+                PhuongThucThanhToan:
+                    paymentMethod,
+
+                Items:
+                    restaurantCartFix.map(
+                        function (item) {
+
+                            return {
+
+                                MaMonAn:
+                                    Number(
+                                        item.id
+                                    ),
+
+                                SoLuong:
+                                    Number(
+                                        item.quantity
+                                    )
+
+                            };
+
+                        }
+                    )
+
+            };
+
+
+        // =====================================================
+        // BUTTON
+        // =====================================================
+
+        const button =
+            document.getElementById(
+                'placeOrderButton'
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        button.disabled =
+            true;
+
+
+        button.innerHTML =
+            '<i class="' +
+            'fas fa-spinner fa-spin mr-2">' +
+            '</i>' +
+            'ĐANG XỬ LÝ...';
+
+
+        try {
+
+            // =================================================
+            // GỬI ĐƠN
+            // =================================================
+
+            const response =
+                await fetch(
+                    '@Url.Action(
+                        "PlaceOrder",
+                        "Restaurant"
+                    )',
+                    {
+                        method:
+                            'POST',
+
+                        headers:
+                            {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                        body:
+                            JSON.stringify(
+                                data
+                            )
+                    }
+                );
+
+
+            // =================================================
+            // HTTP ERROR
+            // =================================================
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'HTTP '
+                    +
+                    response.status
+                );
+
+            }
+
+
+            const result =
+                await response.json();
+
+
+            // =================================================
+            // SERVER TỪ CHỐI
+            // =================================================
+
+            if (!result.success) {
+
+                showRestaurantOrderErrorFix(
+                    result.message
+                    ||
+                    'Không thể đặt món.'
+                );
+
+                return;
+
+            }
+
+
+            // =================================================
+            // THÀNH CÔNG
+            // =================================================
+
+            restaurantCartFix =
+                [];
+
+
+            saveRestaurantCartFix();
+
+
+            renderRestaurantCartFix();
+
+
+            closeOrderModal();
+
+
+            alert(
+                'ĐẶT MÓN THÀNH CÔNG!\\n\\n'
+                +
+                'Mã đơn: #'
+                +
+                result.orderId
+                +
+                '\\n'
+                +
+                'Tổng tiền: '
+                +
+                restaurantFormatMoney(
+                    result.totalAmount
+                )
+            );
+
+
+            // =================================================
+            // RESET FORM
+            // =================================================
+
+            if (phoneInput) {
+
+                phoneInput.value =
+                    '';
+
+            }
+
+
+            if (tableInput) {
+
+                tableInput.value =
+                    '';
+
+            }
+
+
+            if (roomInput) {
+
+                roomInput.value =
+                    '';
+
+            }
+
+
+            if (noteInput) {
+
+                noteInput.value =
+                    '';
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            showRestaurantOrderErrorFix(
+                'Không thể kết nối tới hệ thống đặt món.'
+            );
+
+        }
+        finally {
+
+            button.disabled =
+                false;
+
+
+            button.innerHTML =
+                '<i class="' +
+                'fas fa-circle-check mr-2">' +
+                '</i>' +
+                'XÁC NHẬN ĐẶT MÓN';
+
+        }
+
+    };
+
+        // =========================================================
+        // LOAD
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                loadRestaurantCartFix();
+
+                applyRestaurantFoodFilter();
+
+            }
+        );
+
+    </script>
+</body>
+
+</html>

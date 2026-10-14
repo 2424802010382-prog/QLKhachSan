@@ -1,0 +1,767 @@
+﻿@model IEnumerable<QLKhachSan.Models.RestaurantFoodAdminViewModel>
+
+@using System.Linq
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Quản lý thực đơn - Luxury Hotel
+    </title>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+</head>
+
+
+<body class="bg-gray-100 min-h-screen">
+
+
+    <!-- HEADER -->
+
+    <header class="bg-[#1c1108]
+                   text-white
+                   shadow-lg">
+
+        <div class="max-w-7xl
+                    mx-auto
+                    px-5
+                    py-4
+                    flex
+                    items-center
+                    justify-between">
+
+
+            <div>
+
+                <p class="text-yellow-400
+                          text-xs
+                          tracking-[3px]">
+
+                    LUXURY HOTEL
+
+                </p>
+
+
+                <h1 class="text-xl
+                           font-extrabold">
+
+                    Quản lý thực đơn
+
+                </h1>
+
+            </div>
+
+
+            <div class="flex gap-3">
+
+
+                <a href="@Url.Action(
+                            "AdminOrders",
+                            "Restaurant"
+                         )"
+                   class="border
+                          border-yellow-500
+                          text-yellow-300
+                          px-4
+                          py-2
+                          rounded-xl">
+
+                    <i class="fas
+                              fa-receipt
+                              mr-1">
+                    </i>
+
+                    Đơn gọi món
+
+                </a>
+
+
+                <a href="@Url.Action(
+                            "Index",
+                            "Restaurant"
+                         )"
+                   class="bg-yellow-500
+                          text-black
+                          font-bold
+                          px-4
+                          py-2
+                          rounded-xl">
+
+                    Nhà hàng
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="max-w-7xl
+                 mx-auto
+                 p-5
+                 md:p-8">
+
+
+        <div class="flex
+                    flex-col
+                    md:flex-row
+                    md:items-center
+                    md:justify-between
+                    gap-4
+                    mb-7">
+
+
+            <div>
+
+                <h2 class="text-3xl
+                           font-extrabold">
+
+                    Danh sách món ăn
+
+                </h2>
+
+
+                <p class="text-gray-500
+                          mt-1">
+
+                    Quản lý các món đang hiển thị tại nhà hàng.
+
+                </p>
+
+            </div>
+
+
+            <div class="flex
+            items-center
+            gap-3
+            flex-wrap">
+
+
+                <!-- TỔNG SỐ MÓN -->
+
+                <div class="bg-white
+                border
+                rounded-xl
+                px-4
+                py-3">
+
+                    Tổng số:
+
+                    <strong class="text-yellow-700">
+
+                        @(Model == null
+                ? 0
+                : Model.Count())
+                        món
+
+                    </strong>
+
+                </div>
+
+
+                <!-- NÚT THÊM MÓN -->
+
+                <a href="@Url.Action(
+                "AddFood",
+                "Restaurant"
+             )"
+                   class="bg-yellow-500
+              hover:bg-yellow-600
+              text-black
+              font-extrabold
+              px-5
+              py-3
+              rounded-xl
+              whitespace-nowrap">
+
+                    <i class="fas fa-plus mr-2"></i>
+
+                    THÊM MÓN
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <div class="bg-white
+                    rounded-2xl
+                    p-4
+                    mb-6
+                    shadow-sm">
+
+            <div class="relative max-w-xl">
+
+                <i class="fas
+                          fa-magnifying-glass
+                          absolute
+                          left-4
+                          top-1/2
+                          -translate-y-1/2
+                          text-gray-400">
+                </i>
+
+
+                <input type="text"
+                       id="foodAdminSearch"
+                       oninput="filterFoods()"
+                       class="w-full
+                              border
+                              rounded-xl
+                              pl-11
+                              pr-4
+                              py-3"
+                       placeholder="Tìm theo tên món hoặc danh mục..." />
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="bg-white
+                    rounded-2xl
+                    shadow-sm
+                    overflow-hidden">
+
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full
+                              min-w-[1000px]">
+
+
+                    <thead class="bg-[#2a1a0c]
+                                  text-white">
+
+                        <tr>
+
+                            <th class="p-4 text-left">
+                                Mã
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Món ăn
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Danh mục
+                            </th>
+
+                            <th class="p-4 text-right">
+                                Giá
+                            </th>
+
+                            <th class="p-4 text-center">
+                                Chuẩn bị
+                            </th>
+
+                            <th class="p-4 text-center">
+                                Nổi bật
+                            </th>
+
+                            <th class="p-4 text-center">
+                                Trạng thái
+                            </th>
+
+                            <th class="p-4 text-center">
+                                Thao tác
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="foodAdminTable">
+
+
+                        @if (
+                            Model != null
+                        )
+                        {
+                            foreach (
+                                var food
+                                in Model
+                            )
+                            {
+                                string search =
+                                    (
+                                        (food.TenMonAn ?? "")
+                                        + " "
+                                        + (food.TenDanhMuc ?? "")
+                                    )
+                                    .ToLower();
+
+
+                                <tr class="border-b
+                                           hover:bg-yellow-50"
+                                    data-food-row
+                                    data-search="@search">
+
+
+                                    <!-- ID -->
+
+                                    <td class="p-4">
+
+                                        #@food.MaMonAn
+
+                                    </td>
+
+
+
+                                    <!-- NAME -->
+
+                                    <td class="p-4">
+
+                                        <div class="flex
+                                                    items-center
+                                                    gap-3">
+
+
+                                            <div class="w-14
+                                                        h-14
+                                                        bg-yellow-50
+                                                        border
+                                                        rounded-xl
+                                                        overflow-hidden
+                                                        flex
+                                                        items-center
+                                                        justify-center">
+
+
+                                                @if (
+                                                    !string.IsNullOrWhiteSpace(
+                                                        food.HinhAnh
+                                                    )
+                                                )
+                                                {
+                                                    <img src="@food.HinhAnh"
+                                                         alt="@food.TenMonAn"
+                                                         class="w-full
+                                                                h-full
+                                                                object-cover" />
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas
+                                                              fa-utensils
+                                                              text-yellow-600
+                                                              text-xl">
+                                                    </i>
+                                                }
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <p class="font-bold
+                                                          text-gray-900">
+
+                                                    @food.TenMonAn
+
+                                                </p>
+
+
+                                                <p class="text-xs
+                                                          text-gray-400">
+
+                                                    / @food.DonVi
+
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+
+                                    <!-- CATEGORY -->
+
+                                    <td class="p-4">
+
+                                        <span class="bg-yellow-100
+                                                     text-yellow-800
+                                                     font-semibold
+                                                     px-3
+                                                     py-1
+                                                     rounded-full
+                                                     text-sm">
+
+                                            @food.TenDanhMuc
+
+                                        </span>
+
+                                    </td>
+
+
+
+                                    <!-- PRICE -->
+
+                                    <td class="p-4
+                                               text-right
+                                               font-extrabold
+                                               text-yellow-700">
+
+                                        @food.Gia.ToString("N0")đ
+
+                                    </td>
+
+
+
+                                    <!-- TIME -->
+
+                                    <td class="p-4
+                                               text-center">
+
+                                        @if (
+                                            food.ThoiGianChuanBi.HasValue
+                                        )
+                                        {
+                                            <span>
+                                                @food.ThoiGianChuanBi phút
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-gray-400">
+                                                -
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+
+                                    <!-- FEATURED -->
+
+                                    <td class="p-4
+                                               text-center">
+
+                                        @if (food.NoiBat)
+                                        {
+                                            <span class="text-yellow-500">
+
+                                                <i class="fas fa-star"></i>
+
+                                                Có
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-gray-400">
+                                                Không
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+
+                                    <!-- STATUS -->
+
+                                    <td class="p-4
+                                               text-center">
+
+                                        @if (food.HoatDong)
+                                        {
+                                            <span class="bg-green-100
+                                                         text-green-700
+                                                         px-3
+                                                         py-1
+                                                         rounded-full
+                                                         text-sm
+                                                         font-bold">
+
+                                                Đang bán
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bg-red-100
+                                                         text-red-700
+                                                         px-3
+                                                         py-1
+                                                         rounded-full
+                                                         text-sm
+                                                         font-bold">
+
+                                                Ngừng bán
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+
+                                    <!-- ACTION -->
+
+                                    <td class="p-4
+                                               text-center">
+                                        <a href="@Url.Action(
+            "EditFood",
+            "Restaurant",
+            new
+            {
+                id = food.MaMonAn
+            }
+         )"
+                                           class="inline-block
+          bg-blue-600
+          hover:bg-blue-700
+          text-white
+          font-bold
+          px-4
+          py-2
+          rounded-xl
+          mr-2">
+
+                                            <i class="fas fa-pen mr-1"></i>
+
+                                            Sửa
+
+                                        </a>
+                                        <button type="button"
+                                                onclick="toggleFoodStatus(
+                                                    @food.MaMonAn,
+                                                    '@food.TenMonAn'
+                                                )"
+                                                class="@(food.HoatDong
+                                                    ? "bg-red-500 hover:bg-red-600"
+                                                    : "bg-green-600 hover:bg-green-700")
+                                                       text-white
+                                                       font-bold
+                                                       px-4
+                                                       py-2
+                                                       rounded-xl">
+
+                                            @if (food.HoatDong)
+                                            {
+                                                <span>
+
+                                                    <i class="fas
+                                                              fa-ban
+                                                              mr-1">
+                                                    </i>
+
+                                                    Ngừng bán
+
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+
+                                                    <i class="fas
+                                                              fa-check
+                                                              mr-1">
+                                                    </i>
+
+                                                    Bán lại
+
+                                                </span>
+                                            }
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <script>
+
+        // =========================================================
+        // TÌM KIẾM
+        // =========================================================
+
+        function normalizeFoodText(
+            value
+        ) {
+
+            return (value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(
+                    /[\u0300-\u036f]/g,
+                    ''
+                )
+                .replace(
+                    /đ/g,
+                    'd'
+                );
+
+        }
+
+
+        function filterFoods() {
+
+            const keyword =
+                normalizeFoodText(
+                    document
+                        .getElementById(
+                            'foodAdminSearch'
+                        )
+                        .value
+                );
+
+
+            document
+                .querySelectorAll(
+                    '[data-food-row]'
+                )
+                .forEach(
+                    function (row) {
+
+                        const search =
+                            normalizeFoodText(
+                                row.getAttribute(
+                                    'data-search'
+                                )
+                            );
+
+
+                        row.classList.toggle(
+                            'hidden',
+                            !search.includes(
+                                keyword
+                            )
+                        );
+
+                    }
+                );
+
+        }
+
+
+
+        // =========================================================
+        // BẬT / NGỪNG BÁN
+        // =========================================================
+
+        async function toggleFoodStatus(
+            id,
+            name
+        ) {
+
+            if (
+                !confirm(
+                    'Bạn muốn thay đổi trạng thái món:\\n'
+                    +
+                    name
+                    +
+                    '?'
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        '@Url.Action(
+                            "ToggleFoodStatus",
+                            "Restaurant"
+                        )'
+                        +
+                        '?id='
+                        +
+                        encodeURIComponent(id),
+                        {
+                            method:
+                                'POST'
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    alert(
+                        result.message
+                    );
+
+                    return;
+
+                }
+
+
+                window.location.reload();
+
+            }
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    'Không thể cập nhật món ăn.'
+                );
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
